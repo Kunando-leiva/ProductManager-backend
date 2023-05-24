@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "title": "vino",
+    "description": "blanco",
+    "price": 185,
+    "thumbnail": "img1",
+    "code": 1,
+    "stock": 10
+  }
+]
