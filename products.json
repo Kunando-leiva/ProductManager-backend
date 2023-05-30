@@ -2,10 +2,109 @@
   {
     "id": 1,
     "title": "vino",
-    "description": "blanco",
-    "price": 185,
+    "description": "tinto",
+    "price": 150,
     "thumbnail": "img1",
     "code": 1,
-    "stock": 10
+    "stock": 120
+  },
+  {
+    "id": 2,
+    "title": "vino",
+    "description": "blanco",
+    "price": 100,
+    "thumbnail": "img2",
+    "code": 2,
+    "stock": 120
+  },
+  {
+    "id": 3,
+    "title": "cerveza",
+    "description": "honey",
+    "price": 120,
+    "thumbnail": "img3",
+    "code": 3,
+    "stock": 120
+  },
+  {
+    "id": 4,
+    "title": "cerveza",
+    "description": "stout",
+    "price": 120,
+    "thumbnail": "img4",
+    "code": 4,
+    "stock": 120
+  },
+  {
+    "id": 5,
+    "title": "cerveza",
+    "description": "ipa",
+    "price": 120,
+    "thumbnail": "img5",
+    "code": 5,
+    "stock": 120
+  },
+  {
+    "id": 6,
+    "title": "cerveza",
+    "description": "porter",
+    "price": 120,
+    "thumbnail": "img6",
+    "code": 6,
+    "stock": 120
+  },
+  {
+    "id": 7,
+    "title": "cerveza",
+    "description": "kolsch",
+    "price": 120,
+    "thumbnail": "img7",
+    "code": 7,
+    "stock": 120
+  },
+  {
+    "id": 8,
+    "title": "fernet",
+    "description": "750ml",
+    "price": 900,
+    "thumbnail": "img8",
+    "code": 8,
+    "stock": 120
+  },
+  {
+    "id": 9,
+    "title": "fernet",
+    "description": "1L",
+    "price": 1500,
+    "thumbnail": "img9",
+    "code": 9,
+    "stock": 120
+  },
+  {
+    "id": 10,
+    "title": "gin tonic",
+    "description": "500ml",
+    "price": 500,
+    "thumbnail": "img10",
+    "code": 10,
+    "stock": 120
+  },
+  {
+    "id": 11,
+    "title": "coca cola",
+    "description": "500ml",
+    "price": 180,
+    "thumbnail": "img11",
+    "code": 11,
+    "stock": 120
+  },
+  {
+    "id": 12,
+    "title": "Agua",
+    "description": "500ml",
+    "price": 120,
+    "thumbnail": "img12",
+    "code": 12,
+    "stock": 120
   }
 ]
