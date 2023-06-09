@@ -1,35 +1,36 @@
-import fs from "fs";
+import fs from 'fs';
 
 class ProductManager {
-    constructor(path) {
+  constructor(path, productManager) {
+    productManager = productManager;
+    this.products = [];
+    this.lastId = 0;
+    this.path = path;
+    this.cargarData();
+  }
+  cargarData() {
+    try {
+      const data = fs.readFileSync(this.path, 'utf8');
+      this.products = JSON.parse(data);
+      this.lastId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
+    } catch (error) {
       this.products = [];
       this.lastId = 0;
-      this.path = path;
-      this.cargarData();
     }
-  
-    cargarData() {
-      try {
-        const data = fs.readFileSync(this.path, 'utf8');
-        this.products = JSON.parse(data);
-        this.lastId = this.products.length > 0 ? this.products[this.products.length - 1].id : 0;
-      } catch (error) {
-        this.products = [];
-        this.lastId = 0;
-      }
-    }
-  
-    GuardarData() {
-      const data = JSON.stringify(this.products, null, 2);
-      fs.writeFileSync(this.path, data, 'utf8');
-    }
+  }
+
+  GuardarData() {
+    const data = JSON.stringify(this.products, null, 2);
+    fs.writeFileSync(this.path, data, 'utf8');
+  }
+
   
     getProducts() {
       return this.products;
     }
   
-    addProduct(title, description, price, thumbnail, code, stock) {
-      if (!title || !description || !price || !thumbnail || !code || !stock) {
+    addProduct(title, description, price, thumbnail, code, stock, category) {
+      if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
         throw new Error('Faltan atributos del producto');
       }
       if (this.products.some(product => product.code === code)) {
@@ -40,10 +41,13 @@ class ProductManager {
         id: ++this.lastId,
         title,
         description,
-        price,
-        thumbnail,
         code,
-        stock
+        price,
+        status:true,
+        stock,
+        category,
+        thumbnail,
+        
       };
   
       this.products.push(product);
@@ -82,18 +86,9 @@ class ProductManager {
     
   
   }
-  
-  const productManager = new ProductManager('products.json');
-   productManager.addProduct("Agua", "500ml", 120, "img12", 12, 120 );
 
-
-
-
-
-  console.log(products)
-  
-  
   
 
 export default ProductManager;
+
 
