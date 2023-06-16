@@ -2,12 +2,17 @@ import fs from 'fs';
 
 class ProductManager {
   constructor(path, productManager) {
-    productManager = productManager;
+    this.productManager = productManager;
     this.products = [];
     this.lastId = 0;
     this.path = path;
     this.cargarData();
   }
+
+  emitProductCreated(product) {
+    io.emit('productCreated', product);
+  }
+
   cargarData() {
     try {
       const data = fs.readFileSync(this.path, 'utf8');

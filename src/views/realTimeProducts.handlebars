@@ -1,0 +1,22 @@
+<div class="container">
+  <h1>{{ data.name }}</h1>
+  <p>{{ data.description }}</p>
+
+  {{#if isAdmin}}
+    {{#each products}}
+      <div class="admin-product">
+        <h2>{{ this.title }}</h2>
+        <p>{{ this.description }}</p>
+        <p>${{ this.price }}</p>
+        <button class="delete-btn" data-id="{{ this.id }}">Eliminar</button>
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="not-admin">
+      <p>No eres admin</p>
+    </div>
+  {{/if}}
+</div>
+
+<script src="./socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

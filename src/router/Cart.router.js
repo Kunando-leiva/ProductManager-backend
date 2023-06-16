@@ -4,8 +4,8 @@ import ProductManager from "../ProductManager.js";
 
 
 const router = Router();
-const productManager = new ProductManager();
-const cartManager = new CartManager('carritos.json', ProductManager);
+const productManager = new ProductManager('products.json');
+const cartManager = new CartManager('carritos.json', productManager);
 
 
 // Ruta para crear un nuevo carrito

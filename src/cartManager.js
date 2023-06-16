@@ -36,37 +36,36 @@ class CartManager {
     this.saveCarts();
     return cartId;
   }
+
   getCartById(cartId) {
     return this.carts[cartId];
   }
 
-
   addProductToCart(cartId, productId, quantity) {
     const cart = this.getCartById(cartId);
-  
+
     if (!cart) {
       throw new Error('Carrito no encontrado');
     }
-  
+
     const parsedQuantity = parseInt(quantity);
-  
+
     if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
       throw new Error('La cantidad debe ser un número válido mayor que cero');
     }
-  
+
     const product = { productId, quantity: parsedQuantity };
     const existingProduct = cart.products.find((p) => p.productId === productId);
-  
+
     if (existingProduct) {
       existingProduct.quantity += parsedQuantity;
     } else {
       cart.products.push(product);
     }
-  
+
     this.saveCarts();
     return cart.products;
   }
-  
 
   getCartProducts(cartId) {
     const cart = this.getCartById(cartId);

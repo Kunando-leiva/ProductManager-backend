@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 30   px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  p {
+    margin: 0 0 10px;
+  }
+  
+  .admin-product {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .admin-product h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .admin-product p {
+    margin: 0;
+  }
+  
+  .not-admin {
+    background-color: #ffe6e6;
+    padding: 10px;
+    margin-bottom: 10px;
+  }

@@ -37,6 +37,7 @@ const cartManager = new CartManager('carritos.json', productManager);
     } catch (error) {
       res.status(400).json({ error: error.message });
     }
+    io.emit('productCreated', product);
   });
 
 
@@ -62,7 +63,9 @@ const cartManager = new CartManager('carritos.json', productManager);
     } catch (error) {
       res.status(404).json({ error: error.message });
     }
+    io.emit('productDeleted', productId);
   });
+
   
   
   router.get("/", (req, res) => {

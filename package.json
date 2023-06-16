@@ -4,18 +4,17 @@
   "description": "",
   "main": "App.js",
   "type": "module",
-  
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node  ./src/ProducManager.js",
+    "start": "node  ./src/productmanager.js",
     "dev": "nodemon ./src/App.js"
-
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.7",
+    "socket.io": "^4.6.2"
   }
 }
