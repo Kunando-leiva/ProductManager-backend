@@ -1,27 +1,82 @@
 const socket = io();
 
-    // Manejar el clic en el botón de eliminar
-    document.addEventListener('click', function(event) {
-      if (event.target.matches('.delete-btn')) {
-        const productId = event.target.getAttribute('data-id');
-        deleteProduct(productId);
-      }
-    });
+socket.emit('message', 'Hola mundo');
 
-    // Función para eliminar un producto
-    function deleteProduct(productId) {
-      // Realizar una solicitud HTTP al servidor para eliminar el producto
-      fetch(`/products/${productId}`, {
-        method: 'DELETE',
-      })
-        .then(response => {
-          if (response.ok) {
-            console.log('Producto eliminado con éxito');
-          } else {
-            console.error('Error al eliminar el producto');
-          }
+document.addEventListener('DOMContentLoaded', function() {
+    const addProductForm = document.getElementById('add-product-form');
+    
+    
+  
+    if (addProductForm) {
+      addProductForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+  
+        const formData = new FormData(addProductForm);
+        const productData = Object.fromEntries(formData.entries());
+  
+        fetch('/Api/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(productData)
         })
-        .catch(error => {
-          console.error('Error en la solicitud de eliminación del producto:', error);
-        });
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Error al agregar el producto');
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      });
     }
+
+
+const deleteButtons = document.querySelectorAll('.delete-btn');
+deleteButtons.forEach(button => {
+  button.addEventListener('click', function(event) {
+    const productId = event.target.getAttribute('data-id');
+
+    fetch(`/Api/products/${productId}`, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Error al eliminar el producto');
+        }
+      })
+      .then(data => {
+        // Manejar la respuesta del servidor
+        console.log(data);
+      })
+      .catch(error => {
+        // Manejar errores de la petición
+        console.error(error);
+      });
+  });
+});
+
+
+});
+
+
+
+
+  
+    
+
+  
+  
+  
+  
+  
+  
+  

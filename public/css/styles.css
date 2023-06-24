@@ -9,7 +9,7 @@ body {
   }
   
   h1 {
-    font-size: 30   px;
+    font-size: 30px;
     margin-bottom: 10px;
     text-align: center;
   }
@@ -38,4 +38,44 @@ body {
     background-color: #ffe6e6;
     padding: 10px;
     margin-bottom: 10px;
+  }
+
+  form#add-product-form {
+    margin-bottom: 20px;
+  }
+  
+  form#add-product-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  form#add-product-form input,
+  form#add-product-form textarea,
+  form#add-product-form select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  form#add-product-form select {
+    height: 38px;
+  }
+  
+  form#add-product-form button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  form#add-product-form button[type="submit"]:hover {
+    background-color: #0056b3;
   }

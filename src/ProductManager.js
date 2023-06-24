@@ -35,7 +35,7 @@ class ProductManager {
     }
   
     addProduct(title, description, price, thumbnail, code, stock, category) {
-      if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
+      if (!title || !description || !price || !code || !stock || !category) {
         throw new Error('Faltan atributos del producto');
       }
       if (this.products.some(product => product.code === code)) {
