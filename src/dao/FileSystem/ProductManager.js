@@ -34,25 +34,24 @@ class ProductManager {
       return this.products;
     }
   
-    addProduct(title, description, price, thumbnail, code, stock, category) {
-      if (!title || !description || !price || !code || !stock || !category) {
+    addProduct(id, title, description, price, thumbnail, code, stock, category) {
+      if (!title || !description || !price || !code || !stock || !category ) {
         throw new Error('Faltan atributos del producto');
       }
-      if (this.products.some(product => product.code === code)) {
-        throw new Error('El código de producto ya existe');
+      if (this.products.some(product => product.id === id)) {
+        throw new Error('El ID de producto ya existe');
       }
   
       const product = {
         id: ++this.lastId,
         title,
         description,
-        code,
         price,
-        status:true,
         stock,
         category,
+        code,
         thumbnail,
-        
+        status:true,
       };
   
       this.products.push(product);

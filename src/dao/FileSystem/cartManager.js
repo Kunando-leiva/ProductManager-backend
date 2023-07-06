@@ -1,12 +1,13 @@
 import fs from 'fs';
-import ProductManager from './ProductManager.js';
+
+
 
 class CartManager {
-  constructor(path, productManager) {
-    this.lastId = 0;
+  constructor(path, ProductManager) {
+    this.productManager = ProductManager;
     this.carts = {};
+    this.lastId = 0;
     this.path = path;
-    this.productManager = productManager;
     this.loadCarts();
   }
 

@@ -1,73 +1,83 @@
 import express from "express";
 import handlebars from "express-handlebars";
+import mongoose from 'mongoose';
 import __dirname from "./utils.js";
+
 import viewRouter from "./router/viewRouter.js";
-import  products  from "./router/products.router.js";
-import Cart from "./router/Cart.router.js";
 import { Server } from "socket.io";
-import ProductManager from './ProductManager.js';
+import ProductsRouter from './router/Productos.router.js';
+import CartRouter from './router/carrito.router.js';
+import messeges from './router/messages.router.js';
+import MensajesModel from './dao/db/models/messages.js';
+
+
 
 const App = express();
+const connection = mongoose.connect(
+'mongodb+srv://ferbostero91:Kun123@cluster0.68vapzi.mongodb.net/?retryWrites=true&w=majority');
+
+
 
 const httpServer = App.listen(8080, () => {
   console.log("VISTO DEL SERVE 8080");
 });
-
 const io = new Server(httpServer);
+
 
 App.use((req, res, next) => {
   req.io = io;
   next();
 });
 
+
 App.engine( "handlebars", handlebars.engine());
-App.set("views",__dirname + "/views");
+App.set("views", `${__dirname}/views`);
 App.set("view engine", "handlebars");
 
 
 App.use(express.json())
 App.use(express.urlencoded({extended: true}))
+App.use(express.static(`${__dirname}/public`));
 
+
+App.use(express.static('public', {}));
 App.use('/static', express.static('public'))
-App.use('/Api/products', products);
-App.use('/Api/cart', Cart);
+App.use("/css", express.static(`${__dirname}/node_modules/bootstrap/dist/css`));
 App.use('/', viewRouter);
+App.use('/api', ProductsRouter);
+App.use('/api/carrito', CartRouter);
+App.use('/api/mensajes', messeges);
 
 
 
+
+let messages = [];
 
 io.on('connection', (socket) => {
-  console.log('Un cliente se ha conectadooooo');
- 
-  socket.on('message', (data) => {
-    console.log(data);
-  });
-  
+  console.log('Un cliente se ha conectado');
+  io.emit('messageLogs', messages);
 
-  socket.on('deleteProduct', (productId) => {
+
+  socket.on('message', async (data) => {
+    messages.push(data);
+
+    // Guardar el mensaje en la base de datos utilizando Mongoose
     try {
-      ProductManager.deleteProduct(productId);
-      res.sendStatus(200);
-     
-      try {
-        io.emit('productDeleted', productId);
-      } catch (error) {
-        console.error('Error al emitir evento de producto eliminado:', error);
-      
-    }
-      io.emit('productDeleted', productId);
+      const newMessage = new MensajesModel(data);
+      await newMessage.save();
+      console.log('Mensaje guardado en la base de datos');
     } catch (error) {
-      console.error('Error al eliminar el producto:', error);
+      console.error('Error al guardar el mensaje en la base de datos:', error);
     }
+
+    io.emit('messageLogs', messages);
+    socket.broadcast.emit('messageConected', 'Se ha conectado un usuario nuevo');
+    console.log('Un cliente envió un mensaje');
   });
-
-
 });
 
 
-App.use(express.static('public', {
- 
-}));
+
 
 
 

@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { Server } from "socket.io";
-import ProductManager from '../ProductManager.js';
-import CartManager from '../cartManager.js';
+import ProductManager from '../../dao/FileSystem/ProductManager.js';
+
 
 const io = new Server();
 const router = Router();
 const productManager = new ProductManager('products.json');
-const cartManager = new CartManager('carritos.json', productManager);
+
+
+
+router.get('/', (req, res) => {
+  const products = productManager.getAllProducts();
+  res.json(products);
+});
 
 
 router.get('/:pid', (req, res) => {
@@ -27,10 +33,10 @@ router.post('/', (req, res) => {
       id,
       title,
       description,
-      code,
       price,
       stock,
       category,
+      code,
       thumbnails,
       status,
     );
