@@ -1,27 +1,20 @@
-<div class="containerhome">
-  <h1>{{ data.name }}</h1>
-  <p>{{ data.description }}</p>
 
-  {{#if isAdmin}}
-    <h2>BEBIDAS</h2>
-    <div id="productosContainer">
+<h1>Productos</h1>
+
+  {{#if productos.length}}
+    <ul>
       {{#each productos}}
-        <div class="card" id="producto-{{ id }}">
-          <div class="card-body">
-            <h2 class="card-title">{{ title }}</h2>
-            <p class="card-text description">{{ description }}</p>
-            <p class="card-text price">${{ price }}</p>
-          </div>
-        </div>
+        <li>
+          <h2>{{this.title}}</h2>
+          <p>{{this.description}}</p>
+          <p>Precio: ${{this.price}}</p>
+        </li>
       {{/each}}
-    </div>
+    </ul>
   {{else}}
-    <div class="not-admin">
-      <p>No eres admin</p>
-    </div>
+    <p>No hay productos disponibles.</p>
   {{/if}}
 
   <script src="/socket.io/socket.io.js"></script>
-
   <script src="/js/index.js"></script>
 </div>

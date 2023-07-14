@@ -1,7 +1,6 @@
 import express from 'express';
 import MensajeManager from '../dao/db/manager/mensajes.js';
-import { Server } from 'socket.io';
-import e from 'express';
+
 
 const router = express.Router();
 const mensajeManager = new MensajeManager();
@@ -33,13 +32,6 @@ router.get('/mensajes', async (req, res) => {
 });
 
 
-router.get('/mensajes', async (req, res) => {
-  try {
-    const mensajes = await Message.find().lean();
-    res.status(200).json({ status: 'ok', mensajes });
-  } catch (error) {
-    res.status(500).json({ status: 'error', message: 'Error al obtener los mensajes' });
-  }
-});
+
 
 export default router;

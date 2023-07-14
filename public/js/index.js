@@ -20,6 +20,7 @@ Swal.fire({
   socket.emit('message', { user, message: `se ha unido al chat` });
 });
 
+// creacion de mensajes en tiempo real
 chatBox.addEventListener('keyup', (e) => {
   if (e.key === 'Enter') {
     if (chatBox.value.trim().length > 0) {
@@ -29,6 +30,8 @@ chatBox.addEventListener('keyup', (e) => {
   }
 });
 
+
+//actualizacion de mensajes en tiempo real
 socket.on('messageLogs', (data) => {
   let logs = document.getElementById('messageLogs');
   let messages = '';
@@ -38,66 +41,62 @@ socket.on('messageLogs', (data) => {
   logs.innerHTML = messages;
 });
 
+
+//mensaje de usuario conectado
 socket.on('messageConected', (data) => {
   let logs = document.getElementById('messageLogs');
   logs.innerHTML += `<strong>${data}</strong></br>`;
 });
 
-// Escuchar el evento 'nuevoProducto'
-socket.on('nuevoProducto', (producto) => {
-    console.log('Datos del producto:', producto);
-  const productosContainer = document.getElementById('productosContainer');
 
-  // Crear el nuevo elemento del producto
-  const card = document.createElement('div');
-  card.className = 'card';
-  const cardBody = document.createElement('div');
-  cardBody.className = 'card-body';
-  const title = document.createElement('h2');
-  title.className = 'card-title';
-  title.textContent = producto.title;
-  const description = document.createElement('p');
-  description.className = 'card-text';
-  description.textContent = producto.description;
-  const price = document.createElement('p');
-  price.className = 'card-text';
-  price.textContent = `$${producto.price}`;
 
-  // Agregar los elementos al contenedor de productos
-  cardBody.appendChild(title);
-  cardBody.appendChild(description);
-  cardBody.appendChild(price);
-  card.appendChild(cardBody);
-  productosContainer.appendChild(card);
+
+// Escuchar el evento 'productos' y actualizar la lista de productos en tiempo real
+socket.on('productos', (productos) => {
+  updateProductosList(productos);
 });
 
-// Escuchar el evento 'productoEliminado'
-socket.on('productoEliminado', (id) => {
-  const productosContainer = document.getElementById('productosContainer');
+// Función para actualizar la lista de productos
+function updateProductosList(productos) {
+  const productosList = document.getElementById('productos-list');
+  productosList.innerHTML = '';
+  
+  productos.forEach((producto) => {
+    const listItem = document.createElement('li');
+    listItem.innerHTML = `
+      <h2>${producto.title}</h2>
+      <p>${producto.description}</p>
+      <p>Precio: $${producto.price}</p>
+      <button class="delete-btn" data-id="${producto.id}">Eliminar</button>
+      <button class="edit-btn" data-id="${producto.id}">Editar</button>
+    `;
+    
+    productosList.appendChild(listItem);
+  });
+}
 
-  // Buscar el elemento del producto por su ID y eliminarlo
-  const productoElement = document.getElementById(`producto-${id}`);
-  if (productoElement) {
-    productoElement.remove();
+// Manejar el evento de click en el botón 'Eliminar'
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('delete-btn')) {
+    const productId = event.target.getAttribute('data-id');
+    socket.emit('delete-producto', productId);
   }
 });
 
-// Escuchar el evento 'productoActualizado'
-socket.on('productoActualizado', (producto) => {
-  const productosContainer = document.getElementById('productosContainer');
-
-  // Buscar el elemento del producto por su ID y actualizar sus datos
-  const productoElement = document.getElementById(`producto-${producto.id}`);
-  if (productoElement) {
-    productoElement.querySelector('.card-title').textContent = producto.title;
-    productoElement.querySelector('.card-text.description').textContent = producto.description;
-    productoElement.querySelector('.card-text.price').textContent = `$${producto.price}`;
+// Manejar el evento de click en el botón 'Editar'
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('edit-btn')) {
+    const productId = event.target.getAttribute('data-id');
+    // Lógica para editar el producto
   }
 });
 
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+

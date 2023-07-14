@@ -1,80 +1,92 @@
 import carritoModel from "../models/carts.js";
+import productoManager from "./producto.js";
 
-export default class CarritoManager {
-  async createCarrito() {
-    try {
-      const carrito = await carritoModel.create({});
-      return carrito;
-    } catch (error) {
-      throw new Error('Error al crear el carrito: ' + error.message);
-    }
-  }
+const ProductosManager = new productoManager();
+class CarritoManager {
 
-  async getCarritoById(id) {
-    try {
-      const carrito = await carritoModel.findById(id);
-      return carrito;
-    } catch (error) {
-      throw new Error('Error al obtener el carrito: ' + error.message);
-    }
-  }
-
-  async addProductToCarrito(carritoId, product) {
-    try {
-      // Verificar si el producto ya existe en el carrito
-      const existingProduct = await carritoModel.findOne({
-        _id: carritoId,
-        'products.id': product.id
-      });
-
-      if (existingProduct) {
-        // El producto ya existe, incrementar la cantidad
-        await carritoModel.findOneAndUpdate(
-          {
-            _id: carritoId,
-            'products.id': product.id
-          },
-          {
-            $inc: { 'products.$.quantity': 1 }
-          }
-        );
-      } else {
-        // El producto no existe, agregarlo al carrito
-        product.quantity = 1;
-        await carritoModel.findByIdAndUpdate(
-          carritoId,
-          { $push: { products: product } },
-          { new: true }
-        );
+    async createCarrito() {
+      try {
+    
+        const carrito = await carritoModel.create({});
+        return carrito;
+      } catch (error) {
+        console.error('Error al crear el carrito:', error);
+        throw new Error('Error al crear el carrito: ' + error.message);
       }
+    }
+  
+    async getCarritoById(carritoId) {
+      try {
+        const carrito = await carritoModel.findById(carritoId);
+        return carrito;
+      } catch (error) {
+        throw new Error('Error al obtener el carrito: ' + error.message);
+      }
+    }
+  
+    async addProductToCarrito(carritoId, productoId, cantidad) {
+      try {
+        const carrito = await carritoModel.findById(carritoId);
+        if (!carrito) {
+          throw new Error(`No se encontró el carrito con ID ${carritoId}`);
+        }
+    
+        // Obtener los detalles del producto usando la instancia de ProductosManager
+        const producto = await ProductosManager.getProductoById(productoId);
+        if (!producto) {
+          throw new Error(`No se encontró el producto con ID ${productoId}`);
+        }
+    
+        // Agregar el producto al carrito con la cantidad especificada
+        carrito.productos.push({ producto, cantidad });
+        await carrito.save();
+    
+        console.log(`Producto con ID ${productoId} agregado al carrito`);
+        return carrito;
+      } catch (error) {
+        console.error(`Error al agregar el producto con ID ${productoId} al carrito:`, error);
+        throw new Error(`Error al agregar el producto al carrito: ${error.message}`);
+      }
+    }
+    
+    
+    
+    
+  
+    async deleteProductFromCarrito(carritoId, productId) {
+      try {
+        const carrito = await carritoModel.findById(carritoId);
+        if (!carrito) {
+          throw new Error(`No se encontró el carrito con ID ${carritoId}`);
+        }
+    
+        const productIndex = carrito.productos.findIndex(product => product._id == productId);
+        if (productIndex === -1) {
+          throw new Error(`No se encontró el producto con ID ${productId} en el carrito`);
+        }
+    
+        carrito.productos.splice(productIndex, 1);
+        await carrito.save();
+    
+        console.log(`Producto con ID ${productId} eliminado del carrito`);
+        return carrito;
+      } catch (error) {
+        console.error(`Error al eliminar el producto con ID ${productId}:`, error.message);
+        throw new Error(`Error al eliminar el producto con ID ${productId}: ${error.message}`);
+      }
+    }
 
-      // Obtener el carrito actualizado
-      const updatedCarrito = await carritoModel.findById(carritoId);
-      return updatedCarrito;
-    } catch (error) {
-      throw new Error('Error al agregar el producto al carrito: ' + error.message);
+    //obtener todos los carritos
+    async getCarritos() {
+      try {
+        const carritos = await carritoModel.find().lean();
+        return carritos;
+      } catch (error) {
+        console.error('Error al obtener los carritos:', error);
+        throw error;
+      }
     }
   }
+  
 
-  async removeProductFromCarrito(carritoId, productId) {
-    try {
-      const updatedCarrito = await carritoModel.findByIdAndUpdate(
-        carritoId,
-        { $pull: { products: { id: productId } } },
-        { new: true }
-      );
-      return updatedCarrito;
-    } catch (error) {
-      throw new Error('Error al eliminar el producto del carrito: ' + error.message);
-    }
-  }
-
-  async getCarritos() {
-    try {
-      const carritos = await carritoModel.find().lean();
-      return carritos;
-    } catch (error) {
-      throw new Error('Error al obtener los carritos: ' + error.message);
-    }
-  }
-}
+export default CarritoManager;

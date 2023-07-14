@@ -1,72 +1,33 @@
+<h1>Real-Time Products</h1>
+  
+  <!-- Formulario para crear un nuevo producto -->
+  <form method="POST" action="/api/sessions/realTimeProducts">
+    <input type="text" name="title" placeholder="Título" required>
+    <input type="text" name="description" placeholder="Descripción" required>
+    <input type="number" name="price" placeholder="Precio" required>
+    <input type="text" name="category" placeholder="Categoría" required>
+    <input type="text" name="thumbnail" placeholder="URL de la imagen" required>
+    <input type="text" name="code" placeholder="Código" required>
+    <input type="number" name="stock" placeholder="Stock" required>
 
-<div class="containerreal">
-  <h1>{{ datatimereal.titulo }}</h1>
-  <p>{{ datatimereal.description }}</p>
-
-  <form id="add-product-form">
-    <h2>Agregar producto</h2>
-
-    <label for="id">id:</label>
-    <input type="text" id="id" name="id" required><br>
-
-    <label for="title">TITULO:</label>
-    <input type="text" id="title" name="title" required><br>
-
-    <label for="description">Descripción:</label>
-    <textarea id="description" name="description" required></textarea><br>
-
-    <label for="price">Precio:</label>
-    <input type="number" id="price" name="price" required><br>
-
-    <label for="stock">Stock:</label>
-    <input type="number" id="stock" name="stock" required><br>
-
-    <label for="category">Categoría:</label>
-    <input type="text" id="category" name="category" required><br>
-
-    <label for="code">Código:</label>
-    <input type="text" id="code" name="code" required><br>
-
-    <label for="thumbnails">URL de las imágenes:</label>
-    <textarea id="thumbnails" name="thumbnails" required></textarea><br>
-
-    <label for="status">Estado:</label>
-    <select id="status" name="status" required>
-      <option value="active">Activo</option>
-      <option value="inactive">Inactivo</option>
-    </select><br>
-
-    <button type="submit">Agregar producto</button>
+    <button type="submit">Crear Producto</button>
   </form>
-
-  {{#if isAdmin}} 
-  <h1>PRODUCTOS</h1>
+  
+  <!-- Lista de productos -->
+  <ul id="productos-list">
     {{#each productos}}
-   
-      <div class="admin-product">
-        <p>{{ id }}</p>
-        <h2>{{ title }}</h2>
-        <p>{{ description }}</p>
-        <p>${{ price }}</p>
-        <p>{{ stock }}</p>
-        <p>{{ category }}</p>
-        <p>{{ status }}</p>
-        <p>{{ code }}</p>
-        <p class="img">{{ thumbnails }}</p>
-        <div>
-          <button class="delete-btn" data-id="{{ id }}">Eliminar</button>
-        </div> 
-      
-      </div>
-     
+      <li>
+        <h2>{{this.title}}</h2>
+        <p>{{this.description}}</p>
+        <p>Precio: ${{this.price}}</p>
+        <p>Categoría: {{this.category}}</p>
+        <p>URL de la imagen: {{this.thumbnail}}</p>
+        <p>Código: {{this.code}}</p>
+        <p>Stock: {{this.stock}}</p>
+        <p>Id: {{this._id}}</p>
+
+        <button class="delete-btn" data-id="{{this._id}}">Eliminar</button>
+        <button class="edit-btn" data-id="{{this._id}}">Editar</button>
+      </li>
     {{/each}}
-  {{else}}
-    <div class="not-admin">
-      <p>No eres admin</p>
-    </div>
-  {{/if}}
-</div>
-<script src="./socket.io/socket.io.js"></script>
-<script src="/js/index.js"></script>
-
-
+  </ul>
