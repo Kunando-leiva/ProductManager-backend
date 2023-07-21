@@ -1,20 +1,46 @@
+ <h1>{{data.description}}</h1>
 
-<h1>Productos</h1>
+    {{#if isAdmin}}
+        <p>Bienvenido, eres un usuario administrador.</p>
+    {{else}}
+        <p>Bienvenido, eres un usuario regular.</p>
+    {{/if}}
 
-  {{#if productos.length}}
-    <ul>
-      {{#each productos}}
-        <li>
-          <h2>{{this.title}}</h2>
-          <p>{{this.description}}</p>
-          <p>Precio: ${{this.price}}</p>
-        </li>
-      {{/each}}
-    </ul>
-  {{else}}
-    <p>No hay productos disponibles.</p>
-  {{/if}}
+    <h2>Lista de productos</h2>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/js/index.js"></script>
-</div>
+    {{#if productos}}
+        <ul>
+            {{#each productos.docs}}
+                <li>
+                    <strong>{{title}}</strong> - {{this.description}} - ${{this.price}}
+                </li>
+            {{/each}}
+        </ul>
+
+        <div>
+            {{#if hasPrevPage}}
+                <a href="/home.handlebars?page={{prevPage}}">Anterior</a>
+            {{/if}}
+
+            Página: {{currentPage}} de {{totalPages}}
+
+            {{#if hasNextPage}}
+                <a href="/home.handlebars?page={{nextPage}}">Siguiente</a>
+            {{/if}}
+        </div>
+    {{else}}
+        <p>No hay productos disponibles.</p>
+    {{/if}}
+
+    <form action="/filtrar" method="GET">
+        <label for="categoria">Selecciona una categoría:</label>
+        <select name="query" id="categoria">
+            <option value="bebida">Bebida</option>
+            <option value="comida">Comida</option>
+            <option value="postre">Postre</option>
+        </select>
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <script src="./socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>

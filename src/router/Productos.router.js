@@ -1,24 +1,40 @@
 import express from 'express';
-import Producto from '../dao/db/manager/producto.js';
-import ProductosModel from '../dao/db/models/product.js';
+import ProductosManager from '../dao/db/manager/producto.js';
+
+
 
 const router = express.Router();
-const ProductosManager = new Producto();
-
+const productosManager = new ProductosManager();
 
 let lastId = 0;
 
-// Obtener todos los productos
-router.get('/', async (req, res) => {
+// Obtener todos los productos y renderizar la vista
+router.get("/home.handlebars", async (req, res) => {
   try {
-    const { page = 1, limit = 4 } = req.query; // Obtener parámetros de consulta para paginación
+    const { page = 1, limit = 4 } = req.query;
+    const productos = await productosManager.getProductos();
+    
+    // Datos adicionales que deseas pasar a la vista
+    const data = {
+      name: "pony pisador",
+      description: "El mejor lugar para comprar tus productos de la Tierra Media",
+      role: "user",
+    };
 
-    // Realizar la consulta de productos paginados
-    const options = { page: parseInt(page), limit: parseInt(limit) };
-    const productos = await ProductosModel.paginate({}, options);
-    console.log('productos', productos);  
-
-    res.status(200).json({ status: 'success', data: productos });
+    res.render("home.handlebars", {
+      data,
+      productos: productos.docs,
+      style: "styles.css",
+      isAdmin: data.role === "user",
+      totalPages: productos.totalPages,
+      prevPage: productos.prevPage,
+      nextPage: productos.nextPage,
+      currentPage: productos.page,
+      hasPrevPage: productos.hasPrevPage,
+      hasNextPage: productos.hasNextPage,
+      prevLink: productos.prevLink,
+      nextLink: productos.nextLink,
+    });
   } catch (error) {
     console.error('Error al obtener los productos:', error);
     res.status(500).json({ status: 'error', message: 'Error al obtener los productos' });
@@ -26,11 +42,13 @@ router.get('/', async (req, res) => {
 });
 
 
+
+
 // Obtener un producto por ID
 router.get('/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const producto = await ProductosManager.getProductoById(id);
+    const producto = await productosManager.getProductoById(id);
     if (!producto) {
       return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
     }
@@ -54,7 +72,7 @@ router.post('/', async (req, res) => {
       ...req.body,
       id: lastId,
     };
-    const createProducto = await ProductosManager.createProducto(producto);
+    const createProducto = await productosManager.createProducto(producto);
     res.status(201).json({ status: 'ok', producto: createProducto });
   } catch (error) {
     console.error('Error al crear el producto:', error);
@@ -70,7 +88,7 @@ router.put('/:id', async (req, res) => {
     if (!title || !description || !price) {
       return res.status(400).json({ status: 'error', message: 'Faltan datos' });
     }
-    const updatedProducto = await ProductosManager.updateProducto(id, req.body);
+    const updatedProducto = await productosManager.updateProducto(id, req.body);
     if (!updatedProducto) {
       return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
     }
@@ -90,7 +108,7 @@ router.delete('/:id', async (req, res) => {
     if (!title || !description || !price) {
       return res.status(400).json({ status: 'error', message: 'Faltan datos' });
     }
-    const deletedProduct = await ProductosManager.deleteProducto(id);
+    const deletedProduct = await productosManager.deleteProducto(id);
     if (!deletedProduct) {
       return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
     }
@@ -101,44 +119,5 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-//filtro de productos por categoria
-
-router.get('/', async (req, res) => {
-  try {
-    const { category = 'comida' } = req.query;
-
-    const filtro = await ProductosModel.aggregate([
-      {
-        $match: { category: { $regex: category, $options: 'i' } }
-      },
-      {
-        $group: { _id: '$title', totalprice: { $sum: '$price' } }
-      },
-      {
-        $sort: { totalstock: -1 }
-      },
-      {
-        $group: { _id: 1, filtro: { $push: '$$ROOT' } }
-      },
-      {
-        $project: { "_id": 0, filtro: "$filtro" }
-      }
-    ]);
-
-    console.log('filtro', filtro);
-
-    res.json(filtro);
-  } catch (error) {
-    console.error('Error al ejecutar la operación de agregación:', error);
-    res.status(500).json({ error: 'Error al ejecutar la operación de agregación' });
-  }
-});
-
-
-
-//ver los productos de la base de datos y con filtro ProductosModel.find({}).where("category").equals("comida") .explain("executionStats");
-
-
-  
 
 export default router;

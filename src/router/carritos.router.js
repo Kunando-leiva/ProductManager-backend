@@ -1,7 +1,7 @@
 import express from 'express';
 import CarritoManager from '../dao/db/manager/carrito.js';
-import carritoModel from '../dao/db/models/carts.js';
 import ProductosModel from '../dao/db/models/product.js';
+import carritoModel from '../dao/db/models/carts.js';
 
 const router = express.Router();
 const carritoManager = new CarritoManager();
@@ -35,8 +35,9 @@ router.post("/:cid/producto", async (req, res) => {
   const { productoId } = req.body; // Obtener el ID del producto de la solicitud
 
   try {
-    const carrito = await carritoModel.findOne({_id:"64af41d64a0ea66ae597689d"}).populate("productos.producto");
-    const producto = await ProductosModel.findOne({ _id: "64aee1e66a9cdabefed04108" });
+    const carrito = await carritoModel.findOne({ _id: cid }).populate("productos.producto");
+    const producto = await ProductosModel.findOne({ _id: productoId });
+    console.log(JSON.stringify(carrito, null, 2));
 
     if (!carrito) {
       console.log("No se encontró el carrito.");
@@ -50,11 +51,13 @@ router.post("/:cid/producto", async (req, res) => {
 
     const productoEnCarrito = carrito.productos.find(item => item.producto && item.producto.equals(producto._id));
     if (productoEnCarrito) {
-      console.log("El producto ya está en el carrito.");
-      return res.status(400).json({ status: "error", message: "El producto ya está en el carrito" });
+      // Si el producto ya está en el carrito, incrementar la cantidad (quantity) en 1
+      productoEnCarrito.quantity++;
+    } else {
+      // Si el producto no está en el carrito, agregarlo con quantity inicial de 1
+      carrito.productos.push({ producto: producto, quantity: 1 });
     }
 
-    carrito.productos.push({ producto: producto });
     await carrito.save();
     console.log("Producto agregado al carrito exitosamente.");
 
@@ -68,11 +71,13 @@ router.post("/:cid/producto", async (req, res) => {
   }
 });
 
+
 // Obtener todos los carritos
 router.get('/', async (req, res) => {
   try {
     const carritos = await carritoManager.getCarritos();
     res.status(200).json({ status: 'ok', carritos });
+    
   } catch (error) {
     console.error('Error al obtener los carritos:', error);
     res.status(500).json({ status: 'error', message: 'Error al obtener los carritos' });

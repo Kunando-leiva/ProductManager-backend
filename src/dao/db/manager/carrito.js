@@ -7,7 +7,7 @@ class CarritoManager {
     async createCarrito() {
       try {
     
-        const carrito = await carritoModel.create({});
+        const carrito = await carritoModel.create({}).lean();
         return carrito;
       } catch (error) {
         console.error('Error al crear el carrito:', error);

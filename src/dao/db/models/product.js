@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from 'uuid';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import { Schema } from "mongoose";
+
 
 const productoCollection = "producto";
 
@@ -15,14 +15,18 @@ const productoSchema = new mongoose.Schema({
     category: { 
         type: String,
         enum:["bebida", "comida", "postre"] ,
+        default: "comida",
         index: true
      },
     code: { type: Number, unique: true },
     thumbnail: { type: String, max: 100 },
-    quantity: { type: Number, default: 1 }
+    quantity: { type: Number, default: 1 },
+    Date: { type: Date},
 });
 
+
 productoSchema.plugin(mongoosePaginate)
+
 const productoModel = mongoose.model(productoCollection, productoSchema);
 
 export default productoModel

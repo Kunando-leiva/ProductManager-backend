@@ -1,31 +1,53 @@
 import productoModel from "../models/product.js";
+import mongoose from 'mongoose';
 
 class ProductosManager {
 
-//metodo para obtener todos los productos  
-  async getProductos() {
-    try {
-      const productos = await productoModel.find().lean();
+                                                   //metodo para obtener todos los productos  
+                                                   async getProductos(page = 1, limit = 4) {
+                                                    try {
+                                                      const productos = await productoModel.paginate({}, { page, limit });
+                                                      return productos;
+                                                    } catch (error) {
+                                                      console.error('Error al obtener los productos:', error);
+                                                      throw error;
+                                                    }
+                                                  }
+                                                
+                                                
+
+                                               //get explain(index query para ver el tiempo de respuesta de la consulta)
+  async explain() {
+    try{
+      const productos = await productoModel.find().explain("executionStats");
       return productos;
     } catch (error) {
       console.error('Error al obtener los productos:', error);
       throw error;
     }
-  }
+}
 
 
-//metodo para obtener un producto por id
-  async getProductoById(id) {
-    try {
-      const producto = await productoModel.findById(id).lean();
-      return producto;
-    } catch (error) {
-      console.error(`Error al obtener el producto con ID ${id}:`, error);
-      throw error;
+                                                                 //metodo para obtener un producto por id
+async getProductoById(productoId) {
+  try {
+    // Verificar si productoId es un ObjectId válido
+    if (!mongoose.Types.ObjectId.isValid(productoId)) {
+      throw new Error(`El valor '${productoId}' no es un ObjectId válido.`);
     }
-  }
 
-  //metodo para crear un producto
+    // Convierte productoId en un ObjectId válido
+    const objectIdProductoId = new mongoose.Types.ObjectId(productoId);
+
+    const producto = await productoModel.findById(objectIdProductoId);
+    return producto;
+  } catch (error) {
+    throw new Error('Error al obtener el producto: ' + error.message);
+  }
+}
+
+
+                                                                        //metodo para crear un producto
   async createProducto(producto) {
     try {
       
@@ -37,7 +59,7 @@ class ProductosManager {
     }
   }
 
-//metodo para actualizar un producto
+                                                                        //metodo para actualizar un producto
   async updateProducto(id, producto) {
     try {
       const updatedProducto = await productoModel.findByIdAndUpdate(id, producto, { new: true });
@@ -48,7 +70,7 @@ class ProductosManager {
     }
   }
 
-//metodo para eliminar un producto
+                                                                              //metodo para eliminar un producto
 async deleteProducto(id) {
   try {
     const deletedProducto = await productoModel.findByIdAndDelete(id);
@@ -61,10 +83,10 @@ async deleteProducto(id) {
   }
 }
 
+
+
+
 }
-
-
-
 export default ProductosManager;
 
 
