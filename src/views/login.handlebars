@@ -1,9 +1,10 @@
 
 <div>
 
-    <h1>Ahora, logueate</h1>
-
-    <form id="loginForm" >
+    <h1>Bienvenido al Pony Pisador</h1>
+    <img class="imgpony" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Ense%C3%B1a_de_El_P%C3%B3ney_Pisador.svg/800px-Ense%C3%B1a_de_El_P%C3%B3ney_Pisador.svg.png" alt="El Póney Pisador">
+<h2>ingresa Email registrado</h2>
+    <form class="loginForm" id="loginForm" >
 
         <label>Email</label>
         <input name="email">
@@ -11,9 +12,21 @@
         <label>Contraseña</label>
         <input type="password" name="password">
 
-        <input type="submit">
+        <input class="buttregistrenviar" type="submit">
     </form>
+    <h3>si no tienes cuenta registrate</h3>
+
+<button class="buttregistre">
+    <a href="/register">Regístrate</a>
+</button>
+
+<h3>ingresa con Github</h3>
+<button class="buttgit" >
+    <a href="/api/sessions/githubcallback">ingresa con github</a>
+</button>
+
 
 </div>
 
-<script src="/login.js"></script>
+
+<script src="/js/login.js"></script>

@@ -1,5 +1,3 @@
-
-
 const form = document.getElementById('loginForm');
 
 form.addEventListener('submit', async (event) => {
@@ -15,10 +13,9 @@ form.addEventListener('submit', async (event) => {
     },
   });
   const responseData = await response.json();
-  if (responseData.status === 'success') {
-    //redirijo al login
-    //muestro modal
-    window.location.replace('/profile');
-  }
   console.log(responseData);
+  if (responseData.status === 'success') {
+    // Redirijo al perfil del usuario
+    window.location.replace('/menu');
+  }
 });

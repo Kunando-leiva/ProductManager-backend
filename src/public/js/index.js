@@ -1,55 +1,40 @@
 const socket = io();
-
 let user;
-
-const chatBox = document.getElementById('chatBox');
-const messageLogs = document.getElementById('messageLogs');
+let chatBox = document.getElementById("chatBox");
 
 Swal.fire({
-  title: 'Ingresa tu nombre',
-  input: 'text',
-  text: 'Ingresa tu nombre de usuario',
-  icon: 'success',
+  title: "Por favor ingresá tu nombre",
+  input: "text",
+  text: "Nombre",
   inputValidator: (value) => {
-    return !value && 'Por favor ingresa tu nombre de usuario';
+    if (!value) {
+      return "El nombre no debe estar vacío";
+    }
   },
   allowOutsideClick: false,
 }).then((result) => {
   user = result.value;
-  Swal.fire(`Bienvenido al chat ${user}`);
-  socket.emit('message', { user, message: `se ha unido al chat` });
 });
 
-// creacion de mensajes en tiempo real
-chatBox.addEventListener('keyup', (e) => {
-  if (e.key === 'Enter') {
-    if (chatBox.value.trim().length > 0) {
-      socket.emit('message', { user, message: chatBox.value });
-      chatBox.value = '';
-    }
+chatBox.addEventListener("keyup", (e) => {
+  if (e.key === "Enter") {
+    socket.emit("message", { user, message: chatBox.value });
+    chatBox.value = "";
   }
 });
 
-
-// Actualizar lista:
-function updateProducts(productos) {
-	const ul = document.querySelector("ul");
-	ul.innerHTML = "";
-
-	productos.forEach(producto => {
-		const li = document.createElement("li");
-		li.textContent = producto.title;
-		li.className = "real-time-item";
-		ul.appendChild(li);
-	});
-};
-
-// Recibir productos:
-socket.on("productos", (productos) => {
-	updateProducts(productos);
+socket.on("messageLogs", (data) => {
+  let log = document.getElementById("messageLogs");
+  let messages = "";
+  data.forEach((message) => {
+    messages += `<p><strong>${message.user}</strong>: ${message.message}</p>`;
+  });
+  log.innerHTML = messages;
 });
 
-
-
+socket.on("messageConected", (data) => {
+  let log = document.getElementById("messageLogs");
+  log.innerHTML += `<p><strong>${data}</strong></p>`;
+});
 
 

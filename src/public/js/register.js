@@ -1,5 +1,3 @@
-
-
 const form = document.getElementById('registerForm');
 
 form.addEventListener('submit', async (event) => {
@@ -18,7 +16,7 @@ form.addEventListener('submit', async (event) => {
   if (responseData.status === 'success') {
     //redirijo al login
     //muestro modal
-    window.location.replace('/login');
+    window.location.replace('/');
   }
 });
 

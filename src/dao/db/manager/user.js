@@ -1,5 +1,6 @@
 import userModel from "../models/user.js";
 
+
 const userManager = {
   // Función para crear un nuevo usuario en la base de datos
   createUser: async (userData) => {
@@ -44,6 +45,10 @@ const userManager = {
       throw error;
     }
   },
+
+
+
+
 
   // Otras funciones según tus necesidades...
 

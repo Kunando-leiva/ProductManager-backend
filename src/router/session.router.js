@@ -1,29 +1,43 @@
 import { Router } from "express";
-import userModel from "../dao/db/manager/user.js";
+import passport from "passport";
 import userManager from "../dao/db/manager/user.js";
 
 
 const router = Router();
 
-router.post('/register',async(req,res)=>{
-    const result = await userModel.createUser(req.body);//Suponiendo que envió todo bien
-    res.send({status:"success",payload:result});
-})
+router.get("/github", passport.authenticate("github"), async (req, res) => {});
 
-router.post('/login',async(req,res)=>{
-    const {email, password} = req.body;
-    //Número 1!!!!! buscar al usuario, ¿existe?
-    const user = await userModel.authenticateUser({email,password});
-    if(!user) return res.status(400).send({status:"error",error:"Usuario o contraseña incorrectas"});
-    
-    //Número 2!!!! si sí existe el usuario, Créale una SESIÓN.
+router.get(
+  "/githubcallback",
+  passport.authenticate("github"),
+  async (req, res) => {
+    req.session.user = req.user;
+    res.redirect("/menu");
+  }
+);
 
-    req.session.user = {
-        name: `${user.first_name} ${user.last_name}`,
-        email:user.email
+router.post(
+    "/register",
+    passport.authenticate("register", { failureRedirect: "/failureRedirect" }),
+    async (req, res) => {
+      res.send({ status: "success", message: "Usuario creado" });
+   
     }
-
-    res.sendStatus(200);
-})
+);
+  
+router.post(
+    "/login",
+    passport.authenticate("login", { failureRedirect: "/failureRedirect" }),
+    async (req, res) => {
+      if (!req.user)
+        return res.status(400).send({
+          status: "failed",
+          message: "Usuario o contraseña incorrectos",
+        });
+      req.session.user = req.user;
+      res.send({ status: "success", payload: req.user });
+    }
+);
+  
 
 export default router;

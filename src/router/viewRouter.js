@@ -13,7 +13,7 @@ const carritoManager = new CarritoManager();
 const mensajeManager = new MensajeManager();
 
 
-router.get("/", async (req, res) => {
+router.get("/menu", async (req, res) => {
   res.render("menu",{ 
     style:"styles.css",
   });
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 router.get("/home.handlebars", async (req, res) => {
   try {
     // Obtener los parámetros de la consulta
-    const { page = 1, limit = 5, sort, query } = req.query;
+    const { page = 1, limit = 9, sort, query } = req.query;
 
     // Convertir los valores a números enteros (si son proporcionados)
     const pageNumber = parseInt(page);
@@ -44,8 +44,8 @@ router.get("/home.handlebars", async (req, res) => {
 
     // Obtener los productos según las opciones de búsqueda y paginación
     const productos = await productoManager.getProductos(searchOptions, options);
-
-    // Aquí puedes agregar más lógica si es necesario para manejar la consulta adicional
+    console.log(productos, "productos");
+    
 
     // Datos adicionales que deseas pasar a la vista
     const data = {
@@ -68,6 +68,7 @@ router.get("/home.handlebars", async (req, res) => {
       hasNextPage: productos.hasNextPage,
       prevLink: productos.prevLink,
       nextLink: productos.nextLink,
+      
     });
   } catch (error) {
     console.error('Error al obtener los productos:', error);
@@ -91,7 +92,8 @@ router.get("/realTimeProducts", async (req, res) => {
     datatimereal,
     style:"styles.css",
     isAdmin: datatimereal.role === "admin",
-    productos,
+    productos: productos.docs,
+    
 
   });
 
@@ -148,16 +150,22 @@ router.get("/api/carrito", async (req, res) => {
 
 
 router.get('/register',(req,res)=>{
-  res.render('register');
+  res.render('register', {
+    style: "styles.css",
+    });
 })
 
-router.get('/login',(req,res)=>{
-  res.render('login')
+router.get('/',(req,res)=>{
+  res.render('login', {
+    style: "styles.css",
+    });
 })
 
 router.get('/profile',(req,res)=>{
   res.render('profile',{
-      user:req.session.user
+    style: "styles.css",
+    user:req.session.user
+      
   })
 })
 

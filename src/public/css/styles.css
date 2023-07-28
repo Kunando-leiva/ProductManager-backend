@@ -1,23 +1,13 @@
 body {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
     font-family: Arial, sans-serif;
     
   }
 .h1car{
   color:green;
 }
-  .imgpony{
-    width: 30%;
-    height: 60%;
-    
-  }
   
-  .containermenu {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: black;
-  }
+
   
   .containerhome {
     background-color: black;
@@ -58,14 +48,23 @@ body {
   }
   
 h1 {
+  color: green;
     text-align: center;
-    font-size: 36px;
+    font-size: 50px;;
     margin-bottom: 20px;
   }
 
   h2 {
+    color: green;
     text-align: center;
     font-size: 30px;
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    color: green;
+    text-align: center;
+    font-size: 24px;
     margin-bottom: 20px;
   }
   
@@ -75,6 +74,8 @@ h1 {
   }
   
   form {
+    margin: 0 auto;
+    margin-top: 20px;
     margin-bottom: 20px;
     height: 50%;
     width: 50%;
@@ -82,6 +83,7 @@ h1 {
   }
   
   label {
+    color: green;
     display: block;
     margin-top: 10px;
     font-weight: bold;
@@ -99,12 +101,14 @@ h1 {
   }
   
   button[type="submit"] {
+    
     padding: 10px 20px;
     background-color: green;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+
   }
   
   .admin-product {
@@ -144,14 +148,7 @@ h1 {
   .th {
     background-color: #f2f2f2;
   }
- /* public/css/styles.css */
-body {
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  color: #333;
-}
+  
 
 ul {
   list-style-type: none;
@@ -159,6 +156,7 @@ ul {
 }
 
 li {
+  color: green;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   padding: 10px;
@@ -168,4 +166,144 @@ p {
   margin: 0;
 }
 
-/* Otros estilos según tus preferencias */
+.imgpony {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+  height: 60%;
+}
+
+.buttregistre{
+  font-size: larger;
+  background-color: green;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-left: 44%;
+}
+
+a{
+  color: white;
+  text-decoration: none;
+
+}
+
+.buttregistrenviar{
+  font-size: larger;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.buttgit{
+  font-size: larger;
+  background-color: green;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-left: 42%;
+}
+
+.loginForm {
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 50%;
+  width: 50%;
+  margin-left: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.chat {
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 300px;
+  overflow-y: scroll;
+  background-color: #f9f9f9;
+}
+
+.message {
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: #e6e6e6;
+  border-radius: 5px;
+}
+
+.user-message {
+  background-color: #d3e7ff;
+}
+
+.chatbox {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.registerForm{
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 50%;
+  width: 50%;
+  margin-left: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  text-align: center;
+  color: green;
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid green;
+  border-radius: 3px;
+}
+
+input[type="submit"] {
+  font-size: larger;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-top: 20px;
+  width: 50%;
+}
+
+input[type="submit"]:hover {
+  background-color: darkgreen;
+}

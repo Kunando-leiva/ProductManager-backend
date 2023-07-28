@@ -11,9 +11,8 @@ let lastId = 0;
 // Obtener todos los productos y renderizar la vista
 router.get("/home.handlebars", async (req, res) => {
   try {
-    const { page = 1, limit = 4 } = req.query;
     const productos = await productosManager.getProductos();
-    
+
     // Datos adicionales que deseas pasar a la vista
     const data = {
       name: "pony pisador",
@@ -23,7 +22,6 @@ router.get("/home.handlebars", async (req, res) => {
 
     res.render("home.handlebars", {
       data,
-      productos: productos.docs,
       style: "styles.css",
       isAdmin: data.role === "user",
       totalPages: productos.totalPages,
@@ -34,6 +32,7 @@ router.get("/home.handlebars", async (req, res) => {
       hasNextPage: productos.hasNextPage,
       prevLink: productos.prevLink,
       nextLink: productos.nextLink,
+      productos: productos.docs, // productos es un objeto que contiene una propiedad "docs" con el array de productos
     });
   } catch (error) {
     console.error('Error al obtener los productos:', error);

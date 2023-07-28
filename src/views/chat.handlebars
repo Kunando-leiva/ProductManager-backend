@@ -1,10 +1,9 @@
 
-    <h1>HOLA CHAT  </h1>
-<div> 
-    <input type="text" id="chatBox" />
-</div> 
-<P id="messageLogs"></P>
-
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="./socket.io/socket.io.js"></script> 
-<script src="/js/index.js"></script>
+<div class="container">
+    <h1>Chat</h1>
+    <div class="chat" id="messageLogs"></div>
+    <input class="chatbox" type="text" id="chatBox" placeholder="Escribe un mensaje..." />
+  </div>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="./socket.io/socket.io.js"></script>
+  <script src="./js/index.js"></script>

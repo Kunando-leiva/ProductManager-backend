@@ -1,24 +1,19 @@
 <div>
-
     <h1>Regístrate</h1>
+    <form class="registerForm" id="registerForm">
+      <label>Nombre</label>
+      <input name="first_name" required>
 
-    <form id="registerForm" >
+      <label>Apellido</label>
+      <input name="last_name" required>
 
-        <label>Nombre</label>
-        <input name="first_name">
+      <label>Email</label>
+      <input name="email" type="email" required>
 
-        <label>Apellido</label>
-        <input name="last_name">
+      <label>Contraseña</label>
+      <input type="password" name="password" required>
 
-        <label>Email</label>
-        <input name="email">
-
-        <label>Contraseña</label>
-        <input type="password" name="password">
-
-        <input type="submit">
+      <input type="submit" value="Registrarse">
     </form>
-
-</div>
-
-<script src="/register.js"></script>
+  </div>
+  <script src="/js/register.js"></script>

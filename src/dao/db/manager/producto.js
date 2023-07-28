@@ -3,16 +3,20 @@ import mongoose from 'mongoose';
 
 class ProductosManager {
 
-                                                   //metodo para obtener todos los productos  
-                                                   async getProductos(page = 1, limit = 4) {
-                                                    try {
-                                                      const productos = await productoModel.paginate({}, { page, limit });
-                                                      return productos;
-                                                    } catch (error) {
-                                                      console.error('Error al obtener los productos:', error);
-                                                      throw error;
-                                                    }
-                                                  }
+//metodo para obtener todos los productos  
+async getProductos(page , limit) {
+try {
+  const limitNumber = parseInt(limit);
+  if (isNaN(limitNumber) || limitNumber < 1) {
+    limit =20;
+  }
+  const productos = await productoModel.paginate({}, { page, limit, lean: true });
+  return productos;
+} catch (error) {
+  console.error('Error al obtener los productos:', error);
+  throw error;
+}
+}
                                                 
                                                 
 
@@ -77,6 +81,7 @@ async deleteProducto(id) {
     if (!deletedProducto) {
       throw new Error(`Producto con ID ${id} no encontrado en la base de datos`);
     }
+    return deletedProducto; // Retornar el producto eliminado
   } catch (error) {
     console.error(`Error al eliminar el producto con ID ${id}:`, error);
     throw error;
