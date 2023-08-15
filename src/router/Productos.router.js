@@ -1,15 +1,14 @@
-import express from 'express';
+import customRouter from './router.js';
 import ProductosManager from '../dao/db/manager/producto.js';
 
-
-
-const router = express.Router();
+export default class ProductosRouter extends customRouter{
+  init(){
 const productosManager = new ProductosManager();
 
 let lastId = 0;
 
 // Obtener todos los productos y renderizar la vista
-router.get("/home.handlebars", async (req, res) => {
+this.get("/home.handlebars", async (req, res) => {
   try {
     const productos = await productosManager.getProductos();
 
@@ -44,7 +43,7 @@ router.get("/home.handlebars", async (req, res) => {
 
 
 // Obtener un producto por ID
-router.get('/:id', async (req, res) => {
+this.get('/:id', async (req, res) => {
   const id = req.params.id;
   try {
     const producto = await productosManager.getProductoById(id);
@@ -59,7 +58,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Crear un nuevo producto
-router.post('/', async (req, res) => {
+this.post('/', async (req, res) => {
   try {
     const { title, description, price, category, stock, code, thumbnail } = req.body;
     if (!title || !description || !price || !category || !stock || !code || !thumbnail ) {
@@ -80,7 +79,7 @@ router.post('/', async (req, res) => {
 });
 
 // Actualizar un producto
-router.put('/:id', async (req, res) => {
+this.put('/:id', async (req, res) => {
   const id = req.params.id;
   try {
     const { title, description, price } = req.body;
@@ -100,13 +99,9 @@ router.put('/:id', async (req, res) => {
 
 
 // Eliminar un producto
-router.delete('/:id', async (req, res) => {
+this.delete('/:id', async (req, res) => {
   const id = req.params.id;
   try {
-    const { title, description, price } = req.body;
-    if (!title || !description || !price) {
-      return res.status(400).json({ status: 'error', message: 'Faltan datos' });
-    }
     const deletedProduct = await productosManager.deleteProducto(id);
     if (!deletedProduct) {
       return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
@@ -119,4 +114,5 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-export default router;
+}
+}

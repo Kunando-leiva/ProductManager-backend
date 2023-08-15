@@ -1,95 +1,81 @@
-
 import express from "express";
-import session from "express-session";
+import Session from "express-session";
 import handlebars from "express-handlebars";
 import MongoStore from "connect-mongo";
 import mongoose from 'mongoose';
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
-
+import morgan from "morgan";
 import viewRouter from "./router/viewRouter.js";
-import sessionsRouter from "./router/session.router.js";
 import __dirname from "./utils.js";
-
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
-
-import ProductosRouter from './router/Productos.router.js';
-import CartRouter from './router/carritos.router.js';
-import messeges from './router/messages.router.js';
-
-
+import  config  from "./config/config.js";
+import {fork} from 'child_process';
+import indexeRouter from './router/indexRouter.js';
 import MensajesModel from './dao/db/models/messages.js';
-import ProductosModel from './dao/db/models/product.js';
-import carritoModel from "./dao/db/models/carts.js";
-import productoManager from './dao/db/manager/producto.js';
-import CarritoManager from "./dao/db/manager/carrito.js";
-import productoModel from "./dao/db/models/product.js";
-
 
 const App = express();
+const PORT = config.PORT;
+const MONGODB_URL = config.MONGODB_URL;
+const KEY = config.KEY;
 
+App.use(morgan("dev"));
 App.engine("handlebars", handlebars.engine());
 App.set("views", `${__dirname}/views`);
 App.set("view engine", "handlebars");
-
 App.use(express.json());
 App.use(express.urlencoded({ extended: true }));
 App.use(express.static(`${__dirname}/public`));
 
+const connection = mongoose.connect(`${MONGODB_URL}`);
 
-const connection = mongoose.connect('mongodb+srv://ferbostero91:Kun123@cluster0.68vapzi.mongodb.net/?retryWrites=true&w=majority');
+//ver video clase 08/08  min 44:00 
 
 
+
+App.use(cookieParser());
 App.use(
-  session({
+  Session({
     store: new MongoStore({
       mongoUrl:
-      "mongodb+srv://ferbostero91:Kun123@cluster0.68vapzi.mongodb.net/?retryWrites=true&w=majority",
+      `${MONGODB_URL}`,
       ttl: 3600,
     }),
-    secret: 'secret', 
+    secret:`${KEY}`, 
     resave: false,
     saveUninitialized: false,
   })
-  );
-    
+);
 
-
- initializePassport()
+initializePassport()
 App.use(passport.initialize())
 App.use(passport.session())
 
-
-
-
- const httpServer = App.listen(8080, () => {
-  console.log("Servidor escuchando en el puerto 8080");
+const httpServer = App.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+  
 });
- const io = new Server(httpServer);
- 
+const io = new Server(httpServer);
+
+
+
+
+App.use('/api', indexeRouter);
 App.use('/', viewRouter);
-App.use('/api/productos', ProductosRouter);
-App.use('/api/carrito', CartRouter);
-App.use('/api/mensajes', messeges);
-App.use('/api/sessions', sessionsRouter);
+
+
 
 App.use((req, res, next) => {
   req.io = io;
   next();
 });
 
-
-
-
 let messages = [];
 
 io.on('connection', async (socket) => {
   console.log('Un cliente se ha conectado');
 
-  
-
-  
   io.emit('messageLogs', messages);
 
   socket.on('message', async (data) => {
@@ -105,19 +91,21 @@ io.on('connection', async (socket) => {
     io.emit('messageLogs', messages);
     socket.broadcast.emit('messageConected', 'Se ha conectado un usuario nuevo');
     console.log('Un cliente envió un mensaje');
-
-    
-   
-
-
-
   });
-  
-
 });
 
-  
-  
+
+
+
+
+
+App.get('/operacion', async (req, res) => {
+  const child = fork('./src/operacionCompleja.js');
+  child.send('start');
+  child.on('message', (result) => {
+  res.json(`Resultado: ${result}`);
+});
+});
   
 
   
@@ -136,57 +124,20 @@ io.on('connection', async (socket) => {
 
 
 
-App.use(cookieParser());
-
-
-
-App.get("/setCookie", (req, res) => {
-  res.cookie("coder", "coderhouse", { maxAge: 60000 });
-  res.send("Cookie seteada");
-});
-
-App.use("/getCookie", (req, res) => {  
-
-  res.send(req.cookies);
-});
-
-App.use("/removeCookie", (req, res) => {
-  res.clearCookie("coder");
-  res.send("Cookie eliminada");
-});
 
 
 
 
-// App.use(session({
-//   secret: "codersecret",
-  
-//   resave: true,
-  
-//   saveUninitialized: true,
-
-//   cookie: { maxAge: 10000},
-  
-// }));
 
 
-// App.get("/setSession", (req, res) => {
-//   if (req.session.count) {
-//     req.session.count++;
-//     res.send(`Usted ha visitado la pagina ${req.session.count} veces`);
-//   }
-//   else {
-//     req.session.count = 1;
-//     res.send("Bienvenido a la pagina por primera vez");
-//   }
-// });
 
-// App.get("/logout", (req, res) => {
-//   req.session.destroy((err) => {
-//     if (!err) res.send("Logout ok");
-//     else res.send({ status: "Logout ERROR", body: err });
-//   });
-// });
+
+
+
+
+
+
+
 
 
 

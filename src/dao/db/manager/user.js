@@ -2,29 +2,41 @@ import userModel from "../models/user.js";
 
 
 const userManager = {
-  // Función para crear un nuevo usuario en la base de datos
-  createUser: async (userData) => {
-    try {
-      const newUser = await userModel.create(userData);
-      return newUser;
-    } catch (error) {
-      console.error("Error al crear un nuevo usuario:", error);
-      throw error;
-    }
-  },
+ //metodo para crear un usuario
+ createUser: async (userData) => {
+  try {
+    // Crear el usuario sin el carrito asociado
+    const newUser = await userModel.create(userData);
 
-  // Función para buscar un usuario por su correo electrónico
-  findUserByEmail: async (email) => {
+    // Crear el carrito
+    const newCarrito = await carritoModel.create({ productos: [] });
+
+    // Asociar el carrito al usuario usando el campo 'cart'
+    newUser.cart = newCarrito._id;
+    await newUser.save();
+
+    // Usar populate para obtener el usuario con el carrito asociado
+    const userWithCart = await userModel.findById(newUser._id).populate('carts');
+
+    return userWithCart;
+  } catch (error) {
+    console.error("Error al crear un nuevo usuario:", error);
+    throw error;
+  }
+},
+
+  // metodo para buscar un usuario por ID y populando el campo 'cart'
+  findUserById: async (userId) => {
     try {
-      const user = await userModel.findOne({ email });
+      const user = await userModel.findById(userId).populate('carts');
       return user;
     } catch (error) {
-      console.error("Error al buscar usuario por correo electrónico:", error);
+      console.error("Error al buscar usuario por ID:", error);
       throw error;
     }
   },
 
-  // Función para buscar un usuario por su ID
+  // metodo para buscar un usuario por ID
   findUserById: async (userId) => {
     try {
       const user = await userModel.findById(userId);
@@ -35,10 +47,10 @@ const userManager = {
     }
   },
 
-  // Función para verificar si las credenciales de inicio de sesión son válidas
+  // metodo para autenticar un usuario y populando el campo 'cart'
   authenticateUser: async (email, password) => {
     try {
-      const user = await userModel.findOne({ email, password });
+      const user = await userModel.findOne({ email, password }).populate('carts');
       return user;
     } catch (error) {
       console.error("Error al autenticar usuario:", error);
@@ -46,12 +58,27 @@ const userManager = {
     }
   },
 
+  // metodo para mostrar todos los usuarios y populando el campo 'cart'
+  getAllUsers: async () => {
+    try {
+      const users = await userModel.find().lean().populate('carts');
+      return users;
+    } catch (error) {
+      console.error("Error al obtener todos los usuarios:", error);
+      throw error;
+    }
+  },
+
+  //metodo para cerrar sesion
+  logoutUser: async (req, res) => {
+    req.session.destroy();
+    res.redirect("/");
+  },
 
 
-
-
-  // Otras funciones según tus necesidades...
 
 };
+
+
 
 export default userManager;

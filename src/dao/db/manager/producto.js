@@ -10,7 +10,7 @@ try {
   if (isNaN(limitNumber) || limitNumber < 1) {
     limit =20;
   }
-  const productos = await productoModel.paginate({}, { page, limit, lean: true });
+  const productos = await productoModel.paginate({}, { page,limit, lean: true });
   return productos;
 } catch (error) {
   console.error('Error al obtener los productos:', error);

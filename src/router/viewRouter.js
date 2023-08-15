@@ -3,6 +3,10 @@ import CarritoManager from "../dao/db/manager/carrito.js";
 import MensajeManager from "../dao/db/manager/mensajes.js";
 import ProductosManager from "../dao/db/manager/producto.js";
 import productoModel from "../dao/db/models/product.js";
+import { verifyToken } from "../utils.js";
+import passportCall from "../utils/passportcall.util.js";
+import authorization from "../middlewares/auth.middleware.js";
+
 
 
 
@@ -14,16 +18,22 @@ const mensajeManager = new MensajeManager();
 
 
 router.get("/menu", async (req, res) => {
+  console.log("Estructura del objeto req.user:", req.user);
   res.render("menu",{ 
+    user: req.user,
+    
+
     style:"styles.css",
+    
   });
 });
 
 
 
-// Obtener todos los productos y renderizar la vista
+
 router.get("/home.handlebars", async (req, res) => {
   try {
+    
     // Obtener los parámetros de la consulta
     const { page = 1, limit = 9, sort, query } = req.query;
 
@@ -70,6 +80,7 @@ router.get("/home.handlebars", async (req, res) => {
       nextLink: productos.nextLink,
       
     });
+    console.log(req.user.role, "req.user.role");
   } catch (error) {
     console.error('Error al obtener los productos:', error);
     res.status(500).json({ status: 'error', message: 'Error al obtener los productos' });
@@ -77,8 +88,9 @@ router.get("/home.handlebars", async (req, res) => {
 });
 
 
-router.get("/realTimeProducts", async (req, res) => {
+router.get("/realTimeProducts", passportCall("jwt"), authorization("admin"), async (req, res) => {
   try {
+
 
   const productos = await productoManager.getProductos();
  
@@ -149,6 +161,7 @@ router.get("/api/carrito", async (req, res) => {
 
 
 
+
 router.get('/register',(req,res)=>{
   res.render('register', {
     style: "styles.css",
@@ -161,13 +174,6 @@ router.get('/',(req,res)=>{
     });
 })
 
-router.get('/profile',(req,res)=>{
-  res.render('profile',{
-    style: "styles.css",
-    user:req.session.user
-      
-  })
-})
 
 
 
