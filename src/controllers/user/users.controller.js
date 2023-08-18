@@ -1,13 +1,23 @@
-import express from "express";
 import passport from "passport";
-import { generateToken, verifyToken} from "../utils.js";
-import passportCall from "../utils/passportcall.util.js";
-import customRouter from "./router.js";
+import { generateToken, verifyToken} from "../../utils.js";
+import passportCall from "../../utils/passportcall.util.js";
+import  Router  from "express";
+
+const router = Router();
 
 
 
-export default class SessionRouter extends customRouter {
-init() {
+
+
+class UserController{
+  constructor() {
+    this.router = router;
+    this.initializeRoutes();
+
+  }
+
+
+  initializeRoutes() {
 
 this.post(
   "/register",["PUBLIC"],
@@ -72,5 +82,8 @@ this.get("/logout",["PUBLIC"], (req, res) => {
 });
 
 
+  }
+
 }
-}
+
+export default UserController;

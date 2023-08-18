@@ -1,7 +1,7 @@
 import express from 'express';
-import CarritoManager from '../dao/db/manager/carrito.js';
-import ProductosModel from '../dao/db/models/product.js';
-import carritoModel from '../dao/db/models/carts.js';
+import CarritoManager from '../../dao/db/manager/carrito.dao.js';
+import ProductosModel from '../../dao/db/models/productModel.js';
+import carritoModel from '../../dao/db/models/cartsModel.js';
 
 const router = express.Router();
 const carritoManager = new CarritoManager();

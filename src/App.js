@@ -4,7 +4,7 @@ import handlebars from "express-handlebars";
 import MongoStore from "connect-mongo";
 import mongoose from 'mongoose';
 import passport from 'passport';
-import initializePassport from './config/passport.config.js';
+import initializePassport from './authentication/passport.config.js';
 import morgan from "morgan";
 import viewRouter from "./router/viewRouter.js";
 import __dirname from "./utils.js";
@@ -13,7 +13,7 @@ import cookieParser from "cookie-parser";
 import  config  from "./config/config.js";
 import {fork} from 'child_process';
 import indexeRouter from './router/indexRouter.js';
-import MensajesModel from './dao/db/models/messages.js';
+import MensajesModel from './dao/db/models/messagesModel.js';
 
 const App = express();
 const PORT = config.PORT;
@@ -29,9 +29,6 @@ App.use(express.urlencoded({ extended: true }));
 App.use(express.static(`${__dirname}/public`));
 
 const connection = mongoose.connect(`${MONGODB_URL}`);
-
-//ver video clase 08/08  min 44:00 
-
 
 
 App.use(cookieParser());

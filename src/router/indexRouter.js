@@ -1,21 +1,17 @@
-import { Router } from "express";
+import express from "express";
 import viewRouter from "./viewRouter.js";
-import sessionsRouter from "./session.router.js";
-import ProductosRouter from './Productos.router.js';
-import CartRouter from './carritos.router.js';
+import ProductRouter from "./product.router.js";
+import CartRouter from '../controllers/Cart/carts.controller.js';
 import MessagesRouter from './messages.router.js'; 
+import UserRouter from "../controllers/user/users.controller.js";
 
-const router = Router();router
+const router = express.Router();
 
-const productosRouter = new ProductosRouter();
-const sessionRouter = new sessionsRouter();
-const messagesRouter = new MessagesRouter(); 
-
+// Aquí estás usando los routers importados con el método use()
 router.use('/', viewRouter);
-router.use('/productos', productosRouter.getRouter());
-router.use('/carrito', CartRouter);
-router.use('/mensajes', messagesRouter.getRouter()); 
-router.use('/sessions', sessionRouter.getRouter());
-
+router.use('/productos', ProductRouter);
+router.use('/Cart', CartRouter);
+router.use('/mensajes', MessagesRouter);
+router.use('/sessions', UserRouter);
 
 export default router;

@@ -1,4 +1,4 @@
-import MensajesModel from '../models/messages.js';
+import MensajesModel from '../models/messagesModel.js';
 
 class MensajeManager {
   async getMensajes() {

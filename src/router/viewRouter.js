@@ -1,11 +1,12 @@
 import  Express  from "express"; 
-import CarritoManager from "../dao/db/manager/carrito.js";
-import MensajeManager from "../dao/db/manager/mensajes.js";
-import ProductosManager from "../dao/db/manager/producto.js";
-import productoModel from "../dao/db/models/product.js";
-import { verifyToken } from "../utils.js";
+import CarritoManager from "../dao/db/manager/carrito.dao.js";
+import MensajeManager from "../dao/db/manager/mensajes.dao.js";
+import ProductosManager from "../dao/db/manager/productos.dao.js";
 import passportCall from "../utils/passportcall.util.js";
 import authorization from "../middlewares/auth.middleware.js";
+import UserController from "../controllers/user/users.controller.js";
+import ProductsController from "../controllers/Products/Products.controller.js";
+import ProductService from "../services/ProductService.js";
 
 
 
@@ -53,7 +54,7 @@ router.get("/home.handlebars", async (req, res) => {
     }
 
     // Obtener los productos según las opciones de búsqueda y paginación
-    const productos = await productoManager.getProductos(searchOptions, options);
+    const productos = await ProductService.getProducts(searchOptions, options);
     console.log(productos, "productos");
     
 
@@ -92,7 +93,7 @@ router.get("/realTimeProducts", passportCall("jwt"), authorization("admin"), asy
   try {
 
 
-  const productos = await productoManager.getProductos();
+  const productos = await ProductService.getProducts();
  
   let datatimereal = {
     titulo: "cargando productos en tiempo real",
@@ -137,17 +138,12 @@ router.get('/chat', (req, res) => {
 });
 
 
-
-
-router.get("/api/productos", async (req, res) => { 
-  try {
-    const productos = await productoManager.getProductos();
-    res.json(productos);
-  } catch (error) {
-    console.error('Error al obtener los productos:', error);
-    res.status(500).json({ error: 'Error al obtener los productos' });
-  }
+router.get("/api/productoss", async (req, res) => {
+  const productos = await ProductService.getProducts();
+  res.json(productos);
 });
+
+
 
 router.get("/api/mensajes", async (req, res) => {
   const mensajes = await mensajeManager.getMensajes();

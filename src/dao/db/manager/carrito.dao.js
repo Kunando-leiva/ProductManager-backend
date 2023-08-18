@@ -1,5 +1,5 @@
-import carritoModel from "../models/carts.js";
-import productoModel from "../models/product.js";
+import carritoModel from "../models/cartsModel.js";
+import productoModel from "../models/productModel.js";
 
 
 class CarritoManager {
