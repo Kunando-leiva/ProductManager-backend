@@ -37,6 +37,16 @@ class CartService {
       const carts = await this.CartDao.getCarts();
       return carts;
     }
+
+    static async removeProducts(req, res) {
+      try {
+        const { userId, productIds } = req.body;
+        await CartService.removeProductsFromCart(userId, productIds);
+        res.json({ message: 'Productos eliminados del carrito exitosamente' });
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    }
   }
   
   export default CartService;
