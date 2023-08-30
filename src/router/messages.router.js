@@ -1,8 +1,8 @@
-import customRouter from './router.js';
 
-class mensajeManager extends customRouter {
+
+class mensajeManager  {
   constructor() {
-    super();
+
     this.init();
   }
 

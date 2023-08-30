@@ -4,9 +4,9 @@ import handlebars from "express-handlebars";
 import MongoStore from "connect-mongo";
 import mongoose from 'mongoose';
 import passport from 'passport';
-import initializePassport from './authentication/passport.config.js';
+import initializePassport from './middlewares/authentication/passport.config.js';
 import morgan from "morgan";
-import viewRouter from "./router/viewRouter.js";
+// import viewRouter from "./router/viewRouter.js";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
@@ -14,6 +14,11 @@ import  config  from "./config/config.js";
 import {fork} from 'child_process';
 import indexeRouter from './router/indexRouter.js';
 import MensajesModel from './dao/db/models/messagesModel.js';
+import passportCall from "./utils/passportcall.util.js";
+import authorization from "./middlewares/auth.middleware.js";
+import MongoSingleton from "./config/mongoSingleton.js";
+import cors from "cors"
+
 
 const App = express();
 const PORT = config.PORT;
@@ -30,8 +35,21 @@ App.use(express.static(`${__dirname}/public`));
 
 const connection = mongoose.connect(`${MONGODB_URL}`);
 
+const mongoIntance = MongoSingleton.getInstance();
+
+
 
 App.use(cookieParser());
+
+const corsOptions = {
+  origin: 'http://localhost:8080/', // Cambia esto por el dominio de tu frontend
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+App.use(cors(corsOptions));
+
+
 App.use(
   Session({
     store: new MongoStore({
@@ -43,11 +61,11 @@ App.use(
     resave: false,
     saveUninitialized: false,
   })
-);
-
-initializePassport()
-App.use(passport.initialize())
-App.use(passport.session())
+  );
+  
+  initializePassport()
+  App.use(passport.initialize())
+  App.use(passport.session())
 
 const httpServer = App.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
@@ -58,11 +76,14 @@ const io = new Server(httpServer);
 
 
 
-App.use('/api', indexeRouter);
-App.use('/', viewRouter);
+App.use('/', indexeRouter);
+// App.use('/', viewRouter);
 
+App.get("/test",(req,res)=>{
+  res.send("Respuesta!")
 
-
+})
+App.get("/current",passportCall("jwt",{session:false}),authorization("user"),(req, res) => { res.send(req.user); });
 App.use((req, res, next) => {
   req.io = io;
   next();
@@ -102,6 +123,19 @@ App.get('/operacion', async (req, res) => {
   child.on('message', (result) => {
   res.json(`Resultado: ${result}`);
 });
+
+// process.on("message", () => {
+//   console.log("PID", process.pid);
+
+//   let result = 0; 
+
+//   for (let i = 0; i < 5e9; i++){
+//   result += i;
+  
+// }
+
+// process.send(result);
+// });
 });
   
 
