@@ -1,4 +1,4 @@
-import TicketModel from './path/to/TicketModel'; // Ajusta la ruta a donde tengas el modelo TicketModel
+import TicketModel from '../models/ticket.Model.js'; // Ajusta la ruta a donde tengas el modelo TicketModel
 
 class TicketDAO {
   // Crear un nuevo ticket en la base de datos

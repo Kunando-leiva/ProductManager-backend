@@ -1,4 +1,4 @@
-import TicketDAO from './path/to/TicketDAO'; // Ajusta la ruta a donde tengas el DAO TicketDAO
+import TicketDAO from '../dao/db/manager/ticket.dao.js'; // Ajusta la ruta a donde tengas el DAO TicketDAO
 
 class TicketService {
   // Crear un nuevo ticket

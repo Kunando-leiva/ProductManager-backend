@@ -1,4 +1,4 @@
-import TicketService from './path/to/TicketService'; // Ajusta la ruta a donde tengas el servicio TicketService
+import TicketService from '../../services/Tickect.service.js'; // Ajusta la ruta a donde tengas el servicio TicketService
 
 class TicketController {
   // Controlador para crear un nuevo ticket
