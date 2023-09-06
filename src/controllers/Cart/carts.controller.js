@@ -1,18 +1,19 @@
-
+import CartDao from "../../dao/db/carrito.dao.js"
 
 class CartController {
   constructor(
-    CartService, 
-    productService) {
-    this.cartService = CartService;
-    this.productService = productService;
+    CartDao, 
+    productsRepositoryIndex) {
+    this.cartDao = CartDao;
+    this.productsRepositoryIndex = productsRepositoryIndex;
+    
   }
 
   async createCart(req, res) {
     const { products, user } = req.body;
     const cartData = { products, user };
     try {
-      const newCart = await this.cartService.createCart(cartData);
+      const newCart = await this.cartDao.createCart(cartData);
       res.status(201).json(newCart);
     } catch (error) {
       console.error("Error al crear el carrito:", error);
@@ -23,7 +24,7 @@ class CartController {
   async getCartById(req, res) {
     const { cid } = req.params;
     try {
-      const cart = await this.cartService.getCartById(cid);
+      const cart = await this.cartDao.getCartById(cid);
       if (cart) {
         res.json(cart);
       } else {
@@ -46,8 +47,8 @@ class CartController {
 
 
     try {
-      const carrito = await this.cartService.getCartById(cid);
-      const producto = await this.productService.getProductById(pid);
+      const carrito = await this.cartDao.getCartById(cid);
+      const producto = await this.productsRepositoryIndex.getProductById(pid);
 
 
       if (!carrito) {
@@ -68,10 +69,10 @@ class CartController {
         carrito.productos.push(productoEnCarrito);
       }
       
-      await this.cartService.addProductToCart(cid, pid, quantity);
+      await this.cartDao.addProductToCart(cid, pid, quantity);
 
       const productosConDetalles = await Promise.all(carrito.productos.map(async item => {
-        const productoDetalle = await this.productService.getProductById(item.producto._id);
+        const productoDetalle = await this.productsRepositoryIndex.getProductById(item.producto._id);
         return {
           producto: productoDetalle,
           quantity: item.quantity
@@ -92,11 +93,72 @@ class CartController {
   async deleteProductFromCart(req, res) {
     const { cid, pid } = req.params;
     try {
-      await this.cartService.deleteProductFromCart(cid, pid);
+      await this.cartDao.deleteProductFromCart(cid, pid);
       res.status(200).json("Producto eliminado del carrito");
     } catch (error) {
       console.error("Error al eliminar el producto del carrito:", error);
       res.status(500).json({ status: "error", message: "Error al eliminar el producto del carrito" });
+    }
+  }
+  
+  async purchaseCart(req, res) {
+    const { cid } = req.params; // Obtiene el ID del carrito desde los parámetros de la URL
+    
+    try {
+      // Busca el carrito por su ID y popula los productos
+      const cart = await this.cartDao.getCartById(cid);
+  
+      if (!cart) {
+        return res.status(404).json({ message: 'Carrito no encontrado' });
+      }
+  
+      const itemsToPurchase = []; // Almacenará los productos que se pueden comprar
+  
+      // Verifica el stock de cada producto en el carrito y agrega los que se pueden comprar
+      for (const cartItem of cart.productos) {
+        const product = cartItem.producto;
+        const requestedQuantity = cartItem.quantity;
+  
+        // Asume que el producto tiene un campo 'stock' que indica su stock actual
+        if (product.stock >= requestedQuantity) {
+          // Hay suficiente stock para comprar este producto
+          itemsToPurchase.push({ product, quantity: requestedQuantity });
+        }
+      }
+  
+      if (itemsToPurchase.length === 0) {
+        // Ningún producto tiene suficiente stock para la compra
+        return res.status(400).json({ message: 'Ningún producto tiene suficiente stock para la compra' });
+      }
+  
+      // Resta la cantidad comprada del stock de cada producto en itemsToPurchase
+      for (const item of itemsToPurchase) {
+        const product = item.product;
+        const requestedQuantity = item.quantity;
+  
+        // Resta la cantidad comprada del stock del producto
+        product.stock -= requestedQuantity;
+        await product.save();
+      }
+  
+      // Crea una orden de compra para registrar la compra
+      const order = new Order({
+        user: req.user._id, // Asigna el ID del usuario que realiza la compra (si tienes autenticación de usuario)
+        items: itemsToPurchase, // Copia los productos que se pueden comprar a la orden
+        total: cart.total, // Copia el total del carrito a la orden
+      });
+  
+      await order.save();
+  
+      // Marca el carrito como comprado o elimínalo, según tus necesidades
+      // Por ejemplo, si prefieres marcarlo como comprado:
+      cart.comprado = true; // Supongo que tu modelo de carrito tiene un campo "comprado"
+      await cart.save();
+  
+      res.status(200).json({ message: 'Compra exitosa', order });
+    } catch (error) {
+      console.error('Error al finalizar la compra del carrito:', error);
+      res.status(500).json({ error: 'Error al finalizar la compra del carrito' });
     }
   }
 }

@@ -2,12 +2,12 @@
   "name": "proyecto-productmanager",
   "version": "1.0.0",
   "description": "",
-  "main": "App.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/App.js -p 3000 --mode production",
-    "dev": "nodemon ./src/App.js -p 8080 --mode development"
+    "start": "set NODE_ENV=local && nodemon src/index.js",
+    "dev": "set NODE_ENV=development && nodemon src/index.js"
   },
   "keywords": [],
   "author": "",

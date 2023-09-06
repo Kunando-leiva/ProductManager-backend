@@ -3,14 +3,15 @@ import { generateToken } from "../../utils/jwtUtils.js";
 import passport from "passport";
 
 class UserController {
-  constructor(userService) {
-    this.userService = userService;
+  constructor(userDao) {
+    this.userDao = userDao;
+
   }
 
   async createUser(req, res) {
     const userData = req.body;
     try {
-      const newUser = await this.userService.createUser(userData);
+      const newUser = await this.userDao.createUser(userData);
       const token = generateToken(newUser); // Asegúrate de que newUser contenga los datos necesarios
       res.status(201).json({ user: newUser, token }); // Usar res.status().json()
     } catch (error) {
@@ -23,7 +24,7 @@ class UserController {
 
   async getUserById(req, res) {
     const { id } = req.params;
-    const user = await this.userService.getUserById(id);
+    const user = await this.userDao.getUserById(id);
     if (user) {
       res.json(user);
     } else {
@@ -31,15 +32,17 @@ class UserController {
     }
   }
 
+
+
   async getAllUsers(req, res) {
-    const users = await this.userService.getAllUsers();
+    const users = await this.userDao.getAllUsers();
     res.json(users);
   }
 
   async updateUser(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    const updatedUser = await this.userService.updateUser(id, updateData);
+    const updatedUser = await this.userDao.updateUser(id, updateData);
     if (updatedUser) {
       res.json(updatedUser);
     } else {
@@ -49,7 +52,7 @@ class UserController {
 
   async deleteUser(req, res) {
     const { id } = req.params;
-    const deletedUser = await this.userService.deleteUser(id);
+    const deletedUser = await this.userDao.deleteUser(id);
     if (deletedUser) {
       res.json(deletedUser);
     } else {
@@ -61,7 +64,7 @@ class UserController {
     passportCall("login")(req, res, async () => {
     const { email, password } = req.body;
     try {
-      const { user, token } = await this.userService.authenticateUser(email, password);
+      const { user, token } = await this.userDao.authenticateUser(email, password);
       res.json({ user, token });
     } catch (error) {
       res.status(401).json({ message: "Authentication failed" });
@@ -72,7 +75,7 @@ class UserController {
 async getUserProfile(req, res) {
   try {
     const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.userService.getUserById(userId); // Implementa este método en tu servicio
+    const userProfile = await this.userDao.getUserById(userId); // Implementa este método en tu servicio
 
     if (userProfile) {
       res.json(userProfile);
@@ -87,7 +90,7 @@ async getUserProfile(req, res) {
 async getAdminProfile(req, res) {
   try {
     const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.userService.getUserById(userId); // Implementa este método en tu servicio
+    const userProfile = await this.userDao.getUserById(userId); // Implementa este método en tu servicio
     if (userProfile) {
       res.json(userProfile);
     } else {
@@ -151,7 +154,15 @@ async githubCallback(req, res) {
 
 }
 
-
+async logout(req, res) {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ error: "Error during logout", message: err.message });
+    }
+    res.clearCookie("authToken");
+    res.redirect("/");
+  });
+}
 
 
 

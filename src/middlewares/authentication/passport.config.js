@@ -5,11 +5,10 @@ import userModel from "../../dao/db/models/userModel.js";
 import { createHash, isValidPassword } from "../../utils/Hash.js";
 import { Strategy, ExtractJwt as _ExtractJwt } from "passport-jwt";
 import cookieExtractor from "../../utils/cookieExtractor.util.js";
-import config from "../../config/config.js";
+import {key} from "../../config/db.config.js";
 
 
 
-const KEY = config.KEY;
 const localStrategy = local.Strategy;
 const JWTStrategy = Strategy;
 const ExtractJwt = _ExtractJwt;
@@ -107,7 +106,7 @@ const initializePassport = () => {
  // passport jwt 
  passport.use("jwt", new JWTStrategy({
   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),  
-  secretOrKey: `${KEY}`,
+  secretOrKey: `${key}`,
 
 }, async (jwt_payload, done) => {
   try {

@@ -1,5 +1,5 @@
-import CartModel from "../models/cartsModel.js";
-import ProductModel from "../models/productModel.js";
+import CartModel from "./models/cartsModel.js";
+import ProductModel from "./models/productModel.js";
 
 class CartDao {
   async createCart(cartData) {
@@ -8,7 +8,7 @@ class CartDao {
   }
 
   async getCartById(cartId) {
-    const cart = await CartModel.findById(cartId).populate('productos.producto').lean();
+    const cart = await CartModel.findById(cartId).populate('productos.producto');
     return cart;
   }
 

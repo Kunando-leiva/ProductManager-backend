@@ -1,5 +1,5 @@
-import { createHash, isValidPassword } from "../../../utils/Hash.js";
-import userModel from "../models/userModel.js";
+import { createHash, isValidPassword } from "../../utils/Hash.js";
+import userModel from "./models/userModel.js";
 
 class UserDao {
   async createUser(userData) {
@@ -30,6 +30,19 @@ class UserDao {
 
   async getUserByRole(role) {
     return userModel.find({ role });
+  }
+
+  async logoutUser(req) {
+    // El método `destroy` de `express-session` se usa para eliminar la sesión del usuario
+    return new Promise((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ message: "Sesión cerrada correctamente" });
+        }
+      });
+    });
   }
 
   // Agrega más métodos según tus necesidades

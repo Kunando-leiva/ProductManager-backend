@@ -1,23 +1,25 @@
 import express from 'express';
 import CartController from '../controllers/Cart/carts.controller.js';
-import CartDao from '../dao/db/manager/carrito.dao.js';
-import CartService from "../services/Cart.service.js";
+import CartDao from '../dao/db/carrito.dao.js';
+
 import passportCall from '../utils/passportcall.util.js';
-import ProductService from '../services/ProductService.js';
-import ProductDao from '../dao/db/manager/productos.dao.js';
+
+import ProductDao from '../dao/db/productos.dao.js';
+import authorization from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 const cartDao = new CartDao();
 const productDao = new ProductDao();
-const cartService = new CartService(cartDao,productDao);
-const productService = new ProductService(productDao)
-const cartController = new CartController(cartService,productService);
+
+
+const cartController = new CartController(cartDao, productDao);
 
 
 
 router.post('/', cartController.createCart.bind(cartController));
 router.get('/:cid', cartController.getCartById.bind(cartController));
-router.post('/:cid/producto/:pid',  cartController.addProductToCart.bind(cartController));
+router.post('/:cid/producto/:pid', passportCall("jwt",{session:false}),authorization("user"),  cartController.addProductToCart.bind(cartController));
 router.delete('/:cid/producto/:pid', cartController.deleteProductFromCart.bind(cartController));
+router.post('/:cid/purchase', cartController.purchaseCart);
 export default router;

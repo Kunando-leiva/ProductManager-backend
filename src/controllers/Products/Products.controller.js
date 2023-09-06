@@ -1,60 +1,84 @@
+import errorMessages from "../../middlewares/error/errorDictionary.js";
 class ProductController {
-  constructor(productService) {
-    this.productService = productService;
+  constructor(productsRepositoryIndex){
+    this.productsRepositoryIndex = productsRepositoryIndex
+    
   }
 
   async createProduct(req, res) {
+    
     try {
-       const { title, description, price, category, stock, code, thumbnail } = req.body;
-       if (!title || !description || !price || !category || !stock || !code || !thumbnail ) {
-        return res.status(400).json({ status: 'error', message: 'Faltan datos' });
+      // Desestructura los datos del cuerpo de la solicitud
+      const { title, description, price, category, stock, code, thumbnail } = req.body;
+  
+      // Verifica si faltan datos
+      if (!title || !description || !price || !category || !stock || !code || !thumbnail ) {
+        return res.status(400).json({ status: 'error', message: errorMessages });
       }
-
-     
-
-    const productData = req.body;
-    const newProduct = await this.productService.createProduct(productData);
-    res.status(201).json(newProduct);
-  } catch (error) {
-    console.error('Error al crear el producto:', error);
-    res.status(500).json({ status: 'error', message: 'Error al crear el producto' });
+  
+      // Crea un nuevo producto con los datos proporcionados
+      const newProduct = {
+        title,
+        description,
+        price,
+        category,
+        stock,
+        code,
+        thumbnail
+      };
+  
+      // Llama al método para crear un producto en el repositorio
+      
+      const createdProduct = await this.productsRepositoryIndex.createProduct(newProduct);
+  
+      // Devuelve una respuesta con el producto creado
+      res.status(201).json(createdProduct);
+    } catch (error) {
+      console.error('Error al crear el producto:', error);
+      res.status(500).json({ status: 'error', message:errorMessages });
+    }
   }
-  }
+  
 
   async getProductById(req, res) {
     const { id } = req.params;
-    const product = await this.productService.getProductById(id);
+    const product = await this.productsRepositoryIndex.getProductById(id);
     console.log("acadeberia",product);
     if (product) {
       res.json(product);
     } else {
-      res.status(404).json({ message: "Product not found" });
+      res.status(404).json({ message: errorMessages });
     }
   }
 
   async getAllProducts(req, res) {
-    const products = await this.productService.getAllProducts();
-    res.json(products);
+    try {
+      const products = await this.productsRepositoryIndex.getAllProducts();
+      res.json(products);
+    } catch (error) {
+      console.error("Error al obtener todos los productos:", error);
+      res.status(500).json({ status: "error", message:errorMessages });
+    }
   }
 
   async updateProduct(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    const updatedProduct = await this.productService.updateProduct(id, updateData);
+    const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
     if (updatedProduct) {
       res.json(updatedProduct);
     } else {
-      res.status(404).json({ message: "Product not found" });
+      res.status(404).json({ message: errorMessages });
     }
   }
 
   async deleteProduct(req, res) {
     const { id } = req.params;
-    const deletedProduct = await this.productService.deleteProduct(id);
+    const deletedProduct = await this.productsRepositoryIndex.deleteProduct(id);
     if (deletedProduct) {
       res.json(deletedProduct);
     } else {
-      res.status(404).json({ message: "Product not found" });
+      res.status(404).json({ message: errorMessages });
     }
   }
 

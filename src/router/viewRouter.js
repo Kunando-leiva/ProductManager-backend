@@ -2,12 +2,11 @@ import ViewsController from "../controllers/views/views.controller.js";
 import express from "express";
 import passportCall from "../utils/passportcall.util.js";
 import authorization from "../middlewares/auth.middleware.js";
-import ProductService from "../services/ProductService.js";
-import CartService from "../services/Cart.service.js";
-import UserService from "../services/users.services.js";
-import ProductDao from "../dao/db/manager/productos.dao.js";
-import CartDao from "../dao/db/manager/carrito.dao.js";
-import UserDao from "../dao/db/manager/users.dao.js";
+
+
+import ProductDao from "../dao/db/productos.dao.js";
+import CartDao from "../dao/db/carrito.dao.js";
+import UserDao from "../dao/db/users.dao.js";
 
 const router = express.Router();
 
@@ -16,20 +15,20 @@ const router = express.Router();
 const productDao = new ProductDao();
 const cartDao = new CartDao();
 const userDao = new UserDao();
-const productServices = new ProductService(productDao);
-const cartServices = new CartService(cartDao);
-const userServices = new UserService(userDao);
-const viewsController = new ViewsController(productServices, cartServices, userServices);
+
+const viewsController = new ViewsController(productDao, cartDao, userDao);
 
 
 
-router.get("/home", viewsController.getHome);
-router.get("/", viewsController.getLogin);
-router.get("/register", viewsController.getRegister);
+router.get("/home", viewsController.getHome.bind(viewsController))
+router.get("/", viewsController.getLogin.bind(viewsController));
+router.get("/register", viewsController.getRegister.bind(viewsController));
 router.get("/menu", viewsController.getMenu);
-router.get("/carrito", viewsController.getCart);
-router.get("/realTimeProducts",passportCall("jwt"),authorization("admin"), viewsController.getRealTimeProducts);
+router.get("/carrito", viewsController.getCart.bind(viewsController));
+router.get("/realTimeProducts",passportCall("jwt"),authorization("admin"), viewsController.getRealTimeProducts.bind(viewsController));
 router.get("/chat", viewsController.getChat);
+
+
 
 
 

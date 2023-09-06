@@ -1,34 +1,10 @@
 import fs from 'fs';
 
-
-
 class CartManager {
-  constructor(path, ProductManager) {
-    this.productManager = ProductManager;
-    this.carts = {};
-    this.lastId = 0;
+  constructor(path, productManager) {
+    this.productManager = productManager;
     this.path = path;
-    this.loadCarts();
-  }
-
-  loadCarts() {
-    try {
-      const data = fs.readFileSync(this.path, 'utf8');
-      this.carts = JSON.parse(data);
-    } catch (error) {
-      this.carts = {};
-    }
-  }
-
-  saveCarts() {
-    const data = JSON.stringify(this.carts, null, 2);
-    fs.writeFileSync(this.path, data, 'utf8');
-  }
-
-  generateUniqueId() {
-    const lastId = this.lastId.toString();
-    const newId = parseInt(lastId) + 1;
-    return newId.toString();
+    this.carts = {};
   }
 
   createCart() {
@@ -85,6 +61,8 @@ class CartManager {
 
     return products;
   }
+
+  // Métodos adicionales que puedas necesitar para mantener la interfaz consistente
 }
 
 export default CartManager;

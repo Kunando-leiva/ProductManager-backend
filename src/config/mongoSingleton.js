@@ -1,23 +1,24 @@
 import mongoose from "mongoose";
-import config from "./config.js";
+import { mongourl } from "./db.config.js";
 
-const MONGODB_URL = config.MONGODB_URL;
-
- class MongoSingleton {
+class MongoSingleton {
   static #instance;
+
   constructor() {
-    mongoose.connect(`${MONGODB_URL}`)
+    this.connection = mongoose.createConnection(`mongodb+srv://ferbostero91:Kun123@cluster0.68vapzi.mongodb.net/?retryWrites=true&w=majority`);
+    this.connection.on("connected", () => {
+      console.log("Conectado a la base de datos");
+    });
   }
 
   static getInstance() {
     if (this.#instance) {
-      console.log("Ya tenes una instancia creada");
+      console.log("Ya tienes una instancia creada");
       return this.#instance;
     }
     this.#instance = new MongoSingleton();
-    console.log("Instancia crceada - conectado");
     return this.#instance;
   }
 }
 
-export default MongoSingleton
+export default MongoSingleton;
