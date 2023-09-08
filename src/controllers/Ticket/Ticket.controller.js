@@ -1,8 +1,8 @@
-import TicketRepository from '../../repositories/ticket.repository.js'; // Asegúrate de proporcionar la ruta correcta
+import TicketRepository from '../../repositories/ticket.repository.js'; 
 import UserDao from '../../dao/db/users.dao.js';
 import mongoose from 'mongoose';
-import User from '../../dao/db/users.dao.js'; // Importa el modelo User
-import Ticket from '../../dao/db/ticket.dao.js'; // Importa el modelo Ticket
+import User from '../../dao/db/users.dao.js'; 
+import Ticket from '../../dao/db/ticket.dao.js'; 
 import TicketModel from "../../dao/db/models/ticket.Model.js"
 
 class TicketController {
@@ -15,7 +15,7 @@ class TicketController {
     try {
       const { code, purchase_datetime, amount, purchaserId } = req.body;
 
-      // Corrige la creación del ObjectId utilizando mongoose.Types.ObjectId()
+      
       const purchaserObjectId = new mongoose.Types.ObjectId(purchaserId);
 
       const newTicket = new TicketModel({
@@ -47,7 +47,7 @@ class TicketController {
         ticketId,
         { purchaser: user._id },
         { new: true }
-      ).populate("purchaser"); // Utiliza populate para obtener el objeto de comprador completo
+      ).populate("purchaser"); 
 
       if (updatedTicket) {
         res.json(updatedTicket);

@@ -14,13 +14,12 @@ import cors from "cors"
 import sessiondConfig from "../db/sessiondbConfig.js";
 import session from "express-session";
 import router from "./router/indexRouter.js"
-
-
-
 import mongoConnect from "../db/index.js";
+import { addLogger } from "./utils/logger.js";
 
 
 const app = express();
+app.use(addLogger)
 
 
 mongoConnect()
@@ -59,7 +58,6 @@ app.get("/test",(req,res)=>{
 app.use('/', indexeRouter);
 
 app.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(req, res) => { res.send(req.user); });
-
 
 
 

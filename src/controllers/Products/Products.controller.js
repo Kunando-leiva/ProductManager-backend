@@ -1,22 +1,23 @@
 import errorMessages from "../../middlewares/error/errorDictionary.js";
+import { addErrorLogger } from "../../utils/logger.js"; 
+
 class ProductController {
-  constructor(productsRepositoryIndex){
-    this.productsRepositoryIndex = productsRepositoryIndex
-    
+  constructor(productsRepositoryIndex) {
+    this.productsRepositoryIndex = productsRepositoryIndex;
   }
 
   async createProduct(req, res) {
-    
     try {
-      // Desestructura los datos del cuerpo de la solicitud
+      
       const { title, description, price, category, stock, code, thumbnail } = req.body;
-  
-      // Verifica si faltan datos
-      if (!title || !description || !price || !category || !stock || !code || !thumbnail ) {
-        return res.status(400).json({ status: 'error', message: errorMessages });
+
+     
+      if (!title || !description || !price || !category || !stock || !code || !thumbnail) {
+        req.logger.error('Faltan datos en la solicitud'); 
+        return res.status(400).json({ status: 'error', message: errorMessages.validationError });
       }
-  
-      // Crea un nuevo producto con los datos proporcionados
+
+      
       const newProduct = {
         title,
         description,
@@ -24,30 +25,33 @@ class ProductController {
         category,
         stock,
         code,
-        thumbnail
+        thumbnail,
       };
-  
-      // Llama al método para crear un producto en el repositorio
+
       
       const createdProduct = await this.productsRepositoryIndex.createProduct(newProduct);
-  
-      // Devuelve una respuesta con el producto creado
+
+      
       res.status(201).json(createdProduct);
     } catch (error) {
-      console.error('Error al crear el producto:', error);
-      res.status(500).json({ status: 'error', message:errorMessages });
+      req.logger.error('Error al crear el producto:', error); 
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
   }
-  
 
   async getProductById(req, res) {
     const { id } = req.params;
-    const product = await this.productsRepositoryIndex.getProductById(id);
-    console.log("acadeberia",product);
-    if (product) {
-      res.json(product);
-    } else {
-      res.status(404).json({ message: errorMessages });
+    try {
+      const product = await this.productsRepositoryIndex.getProductById(id);
+      if (product) {
+        res.json(product);
+      } else {
+        req.logger.error(`No se encontró el producto con ID: ${id}`); 
+        res.status(404).json({ message: errorMessages.notFoundError });
+      }
+    } catch (error) {
+      req.logger.error('Error al obtener el producto por ID:', error); 
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
   }
 
@@ -56,36 +60,49 @@ class ProductController {
       const products = await this.productsRepositoryIndex.getAllProducts();
       res.json(products);
     } catch (error) {
-      console.error("Error al obtener todos los productos:", error);
-      res.status(500).json({ status: "error", message:errorMessages });
+      req.logger.error('Error al obtener todos los productos:', error); 
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
   }
 
   async updateProduct(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
-    if (updatedProduct) {
-      res.json(updatedProduct);
-    } else {
-      res.status(404).json({ message: errorMessages });
+    try {
+      const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
+      if (updatedProduct) {
+        res.json(updatedProduct);
+      } else {
+        req.logger.error(`No se encontró el producto con ID: ${id}`); 
+        res.status(404).json({ message: errorMessages.notFoundError });
+      }
+    } catch (error) {
+      req.logger.error('Error al actualizar el producto:', error); 
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
   }
 
   async deleteProduct(req, res) {
     const { id } = req.params;
-    const deletedProduct = await this.productsRepositoryIndex.deleteProduct(id);
-    if (deletedProduct) {
-      res.json(deletedProduct);
-    } else {
-      res.status(404).json({ message: errorMessages });
+    try {
+      const deletedProduct = await this.productsRepositoryIndex.deleteProduct(id);
+      if (deletedProduct) {
+        res.json(deletedProduct);
+      } else {
+        req.logger.error(`No se encontró el producto con ID: ${id}`); 
+        res.status(404).json({ message: errorMessages.notFoundError });
+      }
+    } catch (error) {
+      req.logger.error('Error al eliminar el producto:', error); 
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
   }
 
-  // Agrega más métodos según tus necesidades
+  
 }
 
 export default ProductController;
+
 
 
 

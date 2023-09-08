@@ -8,6 +8,10 @@ import ticketRouter from "./ticket.router.js"
 import configureCors from "../middlewares/cors.middleware.js";
 import mockProducts from "./mockProducts.router.js";
 import errorHandler from "../middlewares/error/errorHandler.js";
+import passportCall from "../utils/passportcall.util.js";
+import authorization from "../middlewares/auth.middleware.js";
+import  Logger  from "./Logger.Router.js";
+
 
 const router = express.Router();
 
@@ -20,6 +24,8 @@ router.use('/mensajes', MessagesRouter);
 router.use('/sessions', UserRouter);
 router.use('/ticket', ticketRouter);
 router.use('/mockProducts', mockProducts)
+// router.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(req, res) => { res.send(req.user); });
+router.use("/", Logger)
 
 router.use(errorHandler)
 

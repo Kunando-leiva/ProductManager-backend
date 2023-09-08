@@ -13,7 +13,7 @@ class UserController {
     try {
       const newUser = await this.userDao.createUser(userData);
       const token = generateToken(newUser); // Asegúrate de que newUser contenga los datos necesarios
-      res.status(201).json({ user: newUser, token }); // Usar res.status().json()
+      res.status(201).json({ user: newUser, token }); 
     } catch (error) {
       res.status(500).json({ error: "Error creating user" });
     }
