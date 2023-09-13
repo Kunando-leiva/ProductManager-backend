@@ -1,19 +1,18 @@
 import CartDao from "../../dao/db/carrito.dao.js"
 
+
 class CartController {
   constructor(
-    CartDao, 
     productsRepositoryIndex) {
-    this.cartDao = CartDao;
     this.productsRepositoryIndex = productsRepositoryIndex;
-    
+   
   }
 
   async createCart(req, res) {
     const { products, user } = req.body;
     const cartData = { products, user };
     try {
-      const newCart = await this.cartDao.createCart(cartData);
+      const newCart = await this.productsRepositoryIndex.createCart(cartData);
       res.status(201).json(newCart);
     } catch (error) {
       console.error("Error al crear el carrito:", error);
@@ -24,7 +23,7 @@ class CartController {
   async getCartById(req, res) {
     const { cid } = req.params;
     try {
-      const cart = await this.cartDao.getCartById(cid);
+      const cart = await this.productsRepositoryIndex.getCartById(cid);
       if (cart) {
         res.json(cart);
       } else {
@@ -47,7 +46,7 @@ class CartController {
 
 
     try {
-      const carrito = await this.cartDao.getCartById(cid);
+      const carrito = await this.productsRepositoryIndex.getCartById(cid);
       const producto = await this.productsRepositoryIndex.getProductById(pid);
 
 
@@ -69,7 +68,7 @@ class CartController {
         carrito.productos.push(productoEnCarrito);
       }
       
-      await this.cartDao.addProductToCart(cid, pid, quantity);
+      await this.productsRepositoryIndex.addProductToCart(cid, pid, quantity);
 
       const productosConDetalles = await Promise.all(carrito.productos.map(async item => {
         const productoDetalle = await this.productsRepositoryIndex.getProductById(item.producto._id);
@@ -93,7 +92,7 @@ class CartController {
   async deleteProductFromCart(req, res) {
     const { cid, pid } = req.params;
     try {
-      await this.cartDao.deleteProductFromCart(cid, pid);
+      await this.productsRepositoryIndex.deleteProductFromCart(cid, pid);
       res.status(200).json("Producto eliminado del carrito");
     } catch (error) {
       console.error("Error al eliminar el producto del carrito:", error);
@@ -103,10 +102,10 @@ class CartController {
   
   async purchaseCart(req, res) {
     const { cid } = req.params; // Obtiene el ID del carrito desde los parámetros de la URL
-    
+    console.log("cartdao", cid)
     try {
       // Busca el carrito por su ID y popula los productos
-      const cart = await this.cartDao.getCartById(cid);
+      const cart = await this.productsRepositoryIndex.getCartById(cid);
   
       if (!cart) {
         return res.status(404).json({ message: 'Carrito no encontrado' });
@@ -142,7 +141,7 @@ class CartController {
       }
   
       // Crea una orden de compra para registrar la compra
-      const order = new Order({
+      const order = new order({
         user: req.user._id, // Asigna el ID del usuario que realiza la compra (si tienes autenticación de usuario)
         items: itemsToPurchase, // Copia los productos que se pueden comprar a la orden
         total: cart.total, // Copia el total del carrito a la orden

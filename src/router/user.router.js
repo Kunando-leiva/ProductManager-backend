@@ -1,6 +1,6 @@
 import express from "express";
 import UserController from "../controllers/user/users.controller.js";
-import UserDao from "../dao/db/users.dao.js";
+import UserDao from "../dao/factory.user.js";
 
 import passportCall from "../utils/passportcall.util.js";
 import authorization from "../middlewares/auth.middleware.js";
@@ -8,9 +8,9 @@ import passport from "passport";
 
 
 const router = express.Router();
-const userDao = new UserDao();
 
-const userController = new UserController(userDao);
+
+const userController = new UserController(UserDao);
 
 router.post("/register", userController.createUser.bind(userController)), async (req, res) => {res.redirect("/login")}
 router.post("/", passport.authenticate("login", { session: false }), userController.login);

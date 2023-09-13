@@ -1,11 +1,11 @@
 import productoModel from "./models/productModel.js";
 
-class MongoDAO {
+class productosDAO {
   constructor(){}
 
-  async createProduct(productData) {
+  async createProduct(productDTO) {
     console.log("mongo dao")
-    return await productoModel.create(productData);
+    return await productoModel.create(productDTO);
   }
 
   async getProductById(id) {
@@ -28,4 +28,4 @@ class MongoDAO {
   // Agrega más métodos según tus necesidades
 }
 
-export default MongoDAO;
+export default productosDAO;

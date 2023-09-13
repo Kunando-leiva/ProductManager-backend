@@ -20,7 +20,7 @@ configureCors(router)
 router.use('/', viewRouter);
 router.use('/productos', ProductRouter);
 router.use('/Cart', CartRouter);
-router.use('/mensajes', MessagesRouter);
+router.use('/chat', MessagesRouter);
 router.use('/sessions', UserRouter);
 router.use('/ticket', ticketRouter);
 router.use('/mockProducts', mockProducts)

@@ -3,15 +3,15 @@ import { generateToken } from "../../utils/jwtUtils.js";
 import passport from "passport";
 
 class UserController {
-  constructor(userDao) {
-    this.userDao = userDao;
+  constructor(UserRepositoryIdenx) {
+    this.userRepositoryIdenx = UserRepositoryIdenx;
 
   }
 
   async createUser(req, res) {
     const userData = req.body;
     try {
-      const newUser = await this.userDao.createUser(userData);
+      const newUser = await this.userRepositoryIdenx.createUser(userData);
       const token = generateToken(newUser); // Asegúrate de que newUser contenga los datos necesarios
       res.status(201).json({ user: newUser, token }); 
     } catch (error) {
@@ -24,7 +24,7 @@ class UserController {
 
   async getUserById(req, res) {
     const { id } = req.params;
-    const user = await this.userDao.getUserById(id);
+    const user = await this.userRepositoryIdenx.getUserById(id);
     if (user) {
       res.json(user);
     } else {
@@ -35,14 +35,14 @@ class UserController {
 
 
   async getAllUsers(req, res) {
-    const users = await this.userDao.getAllUsers();
+    const users = await this.userRepositoryIdenx.getAllUsers();
     res.json(users);
   }
 
   async updateUser(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    const updatedUser = await this.userDao.updateUser(id, updateData);
+    const updatedUser = await this.userRepositoryIdenx.updateUser(id, updateData);
     if (updatedUser) {
       res.json(updatedUser);
     } else {
@@ -52,7 +52,7 @@ class UserController {
 
   async deleteUser(req, res) {
     const { id } = req.params;
-    const deletedUser = await this.userDao.deleteUser(id);
+    const deletedUser = await this.userRepositoryIdenx.deleteUser(id);
     if (deletedUser) {
       res.json(deletedUser);
     } else {
@@ -64,7 +64,7 @@ class UserController {
     passportCall("login")(req, res, async () => {
     const { email, password } = req.body;
     try {
-      const { user, token } = await this.userDao.authenticateUser(email, password);
+      const { user, token } = await this.userRepositoryIdenx.authenticateUser(email, password);
       res.json({ user, token });
     } catch (error) {
       res.status(401).json({ message: "Authentication failed" });
@@ -75,7 +75,7 @@ class UserController {
 async getUserProfile(req, res) {
   try {
     const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.userDao.getUserById(userId); // Implementa este método en tu servicio
+    const userProfile = await this.userRepositoryIdenx.getUserById(userId); // Implementa este método en tu servicio
 
     if (userProfile) {
       res.json(userProfile);
@@ -90,7 +90,7 @@ async getUserProfile(req, res) {
 async getAdminProfile(req, res) {
   try {
     const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.userDao.getUserById(userId); // Implementa este método en tu servicio
+    const userProfile = await this.userRepositoryIdenx.getUserById(userId); // Implementa este método en tu servicio
     if (userProfile) {
       res.json(userProfile);
     } else {

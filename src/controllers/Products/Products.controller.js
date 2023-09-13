@@ -3,7 +3,9 @@ import { addErrorLogger } from "../../utils/logger.js";
 
 class ProductController {
   constructor(productsRepositoryIndex) {
+
     this.productsRepositoryIndex = productsRepositoryIndex;
+
   }
 
   async createProduct(req, res) {
@@ -14,7 +16,7 @@ class ProductController {
      
       if (!title || !description || !price || !category || !stock || !code || !thumbnail) {
         req.logger.error('Faltan datos en la solicitud'); 
-        return res.status(400).json({ status: 'error', message: errorMessages.validationError });
+        return res.status(400).json({ status: addErrorLogger, message: errorMessages.validationError() });
       }
 
       

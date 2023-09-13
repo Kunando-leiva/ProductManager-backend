@@ -1,6 +1,6 @@
 import express from "express";
 import ProductController from "../controllers/Products/Products.controller.js";
-import ProductDao from "../dao/factory.js";
+import ProductDao from "../dao/factory.producto.js";
 
 import passportCall from "../utils/passportcall.util.js";
 import authorization from "../middlewares/auth.middleware.js";

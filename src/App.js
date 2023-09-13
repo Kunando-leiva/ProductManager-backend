@@ -16,12 +16,17 @@ import session from "express-session";
 import router from "./router/indexRouter.js"
 import mongoConnect from "../db/index.js";
 import { addLogger } from "./utils/logger.js";
+import http from "http";
+import setupSockets from "./utils/socket.js";
+import { cpus } from "os";
 
+console.log(cpus().length)
 
 const app = express();
 app.use(addLogger)
 
-
+const server = http.createServer(app);
+setupSockets(server);
 mongoConnect()
 
 
@@ -65,12 +70,28 @@ app.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(r
 
 
 
-app.get('/operacion', async (req, res) => {
-  const child = fork('./src/operacionCompleja.js');
-  child.send('start');
-  child.on('message', (result) => {
-  res.json(`Resultado: ${result}`);
+app.get('/operacion', (req, res) => {
+ let sum = 0 ;
+ for (let i = 0; i < 5e7; i++){
+  sum += i;
+ }
+ res.json(sum)
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // process.on("message", () => {
 //   console.log("PID", process.pid);
@@ -84,7 +105,7 @@ app.get('/operacion', async (req, res) => {
 
 // process.send(result);
 // });
-});
+// });
 
 
   

@@ -1,15 +1,7 @@
-import MensajesModel from '../models/messagesModel.js';
+import MensajesModel from "./models/messagesModel.js";
 
-class MensajeManager {
-  async getMensajes() {
-    try {
-      const mensajes = await MensajesModel.find().lean();
-      return mensajes;
-    } catch (error) {
-      throw new Error('Error al obtener los mensajes: ' + error.message);
-    }
-  }
-
+class chatDao {
+  
   async createMensaje(data) {
     try {
       const mensaje = await MensajesModel.create(data);
@@ -19,9 +11,17 @@ class MensajeManager {
     }
   }
 
+async getMensajes() {
+    try {
+      const mensajes = await MensajesModel.find();
+      return mensajes;
+    } catch (error) {
+      throw new Error('Error al obtener los mensajes: ' + error.message);
+    }
+  }
   
 
 }
 
 
-export default MensajeManager;
+export default chatDao;

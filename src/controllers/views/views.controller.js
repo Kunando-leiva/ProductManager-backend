@@ -1,9 +1,13 @@
 class ViewController {
-  constructor(productDao, cartDao, userDao) {
+  constructor(productDao, cartDao, userDao, chatDao) {
     this.productDao = productDao;
     this.userDao = userDao;
     this.cartDao = cartDao;
+    this.chatDao = chatDao
+    
+
   }
+
 // funcion para renderizar el home
   async getHome(req, res) {
     const products = await this.productDao.getAllProducts();
@@ -47,10 +51,13 @@ class ViewController {
       res.render("realTimeProducts", { products });
     }
 
-    // funcion para renderizar el chat
-    async getChat(req, res) {
-    const messases = await this.chatDao.getAllProducts();
-    res.render("chat", { messases });
+   
+    async getMensajes(req, res) {  
+        const mensajes = await this.chatDao.getMensajes();
+        res.render("chat.handlebars", { 
+          mensajes,
+          style:"styles.css"
+         });
     }
 
     
@@ -61,7 +68,8 @@ class ViewController {
   }
     
 
-  // Agrega más métodos según tus necesidades
 }
+  
 
-export default ViewController;
+
+export default ViewController

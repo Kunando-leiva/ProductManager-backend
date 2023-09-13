@@ -6,7 +6,7 @@ let Productdao
 switch (persistence) {
   
   case "memory":
-    const { default: ProductManager } = await import("./FileSystem/ProductManager.js");
+    const { default: ProductManager } = await import("./memory/ProductManager.js");
     Productdao = new ProductManager();
     break;
   case "mongo":

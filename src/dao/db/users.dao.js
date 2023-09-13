@@ -2,9 +2,12 @@ import { createHash, isValidPassword } from "../../utils/Hash.js";
 import userModel from "./models/userModel.js";
 
 class UserDao {
+  constructor(){}
+
   async createUser(userData) {
     const hashedPassword = createHash(userData.password);
     const user = { ...userData, password: hashedPassword };
+    console.log("mongos dao")
     return userModel.create(user);
   }
 

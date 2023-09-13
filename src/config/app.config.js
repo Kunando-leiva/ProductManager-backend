@@ -5,7 +5,7 @@ dotenv.config({
 });
 
 export const port = process.env.PORT || 8080;
-export const persistence = process.env.PERSISTENCE || "memory";
+export const persistence = process.env.PERSISTENCE || "mongo";
 
 
 

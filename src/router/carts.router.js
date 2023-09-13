@@ -1,19 +1,18 @@
 import express from 'express';
 import CartController from '../controllers/Cart/carts.controller.js';
-import CartDao from '../dao/db/carrito.dao.js';
+import cartDao from '../dao/factory.cart.js';
 
 import passportCall from '../utils/passportcall.util.js';
 
-import ProductDao from '../dao/db/productos.dao.js';
+import ProductDao from '../dao/factory.producto.js';
 import authorization from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-const cartDao = new CartDao();
-const productDao = new ProductDao();
 
 
-const cartController = new CartController(cartDao, productDao);
+
+const cartController = new CartController(cartDao, ProductDao);
 
 
 

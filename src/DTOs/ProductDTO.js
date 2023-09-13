@@ -1,12 +1,13 @@
 class ProductDTO {
-    constructor(producto) {
-      this.name = producto.title;
-      this.description = producto.description;
-      this.price = producto.price;
-      this.category = producto.category;
-      this.stock = producto.stock;
-      this.status = "user"; // Puedes establecer un valor predeterminado según tus necesidades
-      console.log("Usando el DTO de producto");
+    constructor(product) {
+      this.name = product.title;
+      this.description = product.description;
+      this.price = product.price;
+      this.code = product.code.replace(/\s/g, '');
+      this.category = product.category;
+      this.stock = product.stock;
+      this.status = true; 
+     console.log("Usando el DTO de producto"); 
     }
   }
   

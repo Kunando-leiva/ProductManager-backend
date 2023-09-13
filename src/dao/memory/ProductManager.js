@@ -1,13 +1,15 @@
-class MemoryDAO {
+class productManager {
   constructor() {
     this.products = [];
     this.lastId = 0;
   }
 
-  async createProduct() {
+  async createProduct(newProducInfo) {
     try{
+      this.products.push(newProducInfo)
+
     console.log("memory dao");
-    return this.products;
+    return newProducInfo;
     } catch(error){
       return error
     }
@@ -53,6 +55,6 @@ class MemoryDAO {
   // Agrega más métodos según tus necesidades
 }
 
-export default MemoryDAO;
+export default productManager;
 
 

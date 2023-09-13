@@ -23,11 +23,6 @@ const customLevelOptions={
 }
 
 
-
-
-
-
-
 // Configuración del logger de desarrollo
 const developmentLogger = winston.createLogger({
     levels: customLevelOptions.levels,
