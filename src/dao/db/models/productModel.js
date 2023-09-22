@@ -21,7 +21,18 @@ const productoSchema = new mongoose.Schema({
     code: { type: Number, unique: true },
     thumbnail: { type: String, max: 100 },
     quantity: { type: Number, default: 1 },
-    Date: { type: Date},
+    Date: { type: Date, default: Date.now },
+    owner: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', 
+        validate: {
+            validator: async function (userId) {
+                const user = await mongoose.model('Users').findById(userId);
+                return user && user.premium;
+            },
+            message: 'El propietario debe ser un usuario premium.'
+        }
+    }
 });
 
 

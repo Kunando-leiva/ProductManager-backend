@@ -20,7 +20,7 @@ import http from "http";
 import setupSockets from "./utils/socket.js";
 import { cpus } from "os";
 
-console.log(cpus().length)
+
 
 const app = express();
 app.use(addLogger)

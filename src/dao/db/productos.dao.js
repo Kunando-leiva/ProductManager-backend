@@ -9,12 +9,14 @@ class productosDAO {
   }
 
   async getProductById(id) {
-    return productoModel.findById(id);
-    
+    try {
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getAllProducts() {
-    return productoModel.find();
+    return productoModel.find().lean();
   }
 
   async updateProduct(id, updateData) {

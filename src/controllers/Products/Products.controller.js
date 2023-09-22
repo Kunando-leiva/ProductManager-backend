@@ -70,35 +70,53 @@ class ProductController {
   async updateProduct(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    try {
-      const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
-      if (updatedProduct) {
-        res.json(updatedProduct);
-      } else {
-        req.logger.error(`No se encontró el producto con ID: ${id}`); 
-        res.status(404).json({ message: errorMessages.notFoundError });
-      }
-    } catch (error) {
-      req.logger.error('Error al actualizar el producto:', error); 
-      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
-    }
-  }
+    const userId = req.user.id; // ID del usuario que realiza la solicitud
 
-  async deleteProduct(req, res) {
-    const { id } = req.params;
     try {
-      const deletedProduct = await this.productsRepositoryIndex.deleteProduct(id);
-      if (deletedProduct) {
-        res.json(deletedProduct);
-      } else {
-        req.logger.error(`No se encontró el producto con ID: ${id}`); 
-        res.status(404).json({ message: errorMessages.notFoundError });
-      }
+        const product = await this.productsRepositoryIndex.getProductById(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
+
+        // Verificar si el usuario es admin o el propietario del producto
+        if (req.user.role === "admin" || (req.user.role === "premium" && product.owner === userId)) {
+            const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
+            res.json(updatedProduct);
+        } else {
+            req.logger.error(`No tienes permiso para actualizar este producto.`);
+            res.status(403).json({ message: "No tienes permiso para actualizar este producto" });
+        }
     } catch (error) {
-      req.logger.error('Error al eliminar el producto:', error); 
-      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
+        req.logger.error('Error al actualizar el producto:', error);
+        res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
+}
+
+async deleteProduct(req, res) {
+  const { id } = req.params;
+  const userId = req.user.id; // ID del usuario que realiza la solicitud
+
+  try {
+      const product = await this.productsRepositoryIndex.getProductById(id);
+
+      if (!product) {
+          return res.status(404).json({ message: "Producto no encontrado" });
+      }
+
+      // Verificar si el usuario es admin o el propietario del producto
+      if (req.user.role === "admin" || (req.user.role === "premium" && product.owner === userId)) {
+          const deletedProduct = await this.productsRepositoryIndex.deleteProduct(id);
+          res.json(deletedProduct);
+      } else {
+          req.logger.error(`No tienes permiso para eliminar este producto.`);
+          res.status(403).json({ message: "No tienes permiso para eliminar este producto" });
+      }
+  } catch (error) {
+      req.logger.error('Error al eliminar el producto:', error);
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
   }
+}
 
   
 }

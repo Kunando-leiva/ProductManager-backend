@@ -1,17 +1,65 @@
 http: POST /productos
-http: GET /operacion
-http: GET /operacion
-http: GET /loggerTest
-http: GET /loggerTest
-debug: Este es un mensaje de nivel debug
-http: Este es un mensaje de nivel http
-info: Este es un mensaje de nivel info
-warning: Este es un mensaje de nivel warning
-error: Este es un mensaje de nivel error
+http: POST /sessions
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/65011d5afcb44820de269bc9
+http: DELETE /cart/64ebeff0b34399b61a4d8fd7/producto/64ebca5129b98609ef712d0e
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /sessions/register
+http: POST /sessions
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: GET /socket.io/socket.io.js
+http: GET /socket.io/socket.io.js
+http: POST /sessions/logout
+http: GET /
+http: GET /
+http: GET /css/
+http: GET /js/login.js
+http: GET /css/
+http: POST /sessions/
+http: GET /menu
+http: GET /socket.io/socket.io.js
+http: GET /css/styles.css
+http: GET /js/index.js
+http: GET /js/logout.js
+http: GET /socket.io/socket.io.js
+http: POST /sessions/logout
+http: GET /
+http: GET /
+http: GET /css/
+http: GET /js/login.js
+http: GET /css/
+http: POST /sessions/register
+http: POST /sessions
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /sessions/premium/650cdbd98b7d519438b066d6
+http: POST /sessions/premium/650cdbd98b7d519438b066d6
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /sessions
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /sessions
+http: POST /Cart/64ebeff0b34399b61a4d8fd7/producto/64ebc8db29b98609ef712ce1
+http: POST /sessions/premium/650cdcb60fd0bac365a6cd43
+http: POST /sessions/premium/650cdcb60fd0bac365a6cd43
+http: PUT /sessions/premium/650cdcb60fd0bac365a6cd43
+http: PUT /sessions/premium/650cdcb60fd0bac365a6cd43
+http: PUT /sessions/premium/650cdcb60fd0bac365a6cd43
+http: PUT /sessions/premium/650cdcb60fd0bac365a6cd43
+http: PUT /sessions/premium/650cdcb60fd0bac365a6cd43
+http: PUT /sessions/premium/650cdcb60fd0bac365a6cd43
+http: POST /sessions
 http: POST /productos
-error: Faltan datos en la solicitud
-error: Error al crear el producto: errorMessages.validationError is not a function {"stack":"TypeError: errorMessages.validationError is not a function\n    at ProductController.createProduct (file:///C:/Users/Soledad/Desktop/Proyecto%20ProductManager/src/controllers/Products/Products.controller.js:19:86)\n    at Layer.handle [as handle_request] (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at next (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\route.js:144:13)\n    at Route.dispatch (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\route.js:114:3)\n    at Layer.handle [as handle_request] (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\layer.js:95:5)\n    at C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\index.js:284:15\n    at Function.process_params (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\index.js:346:12)\n    at next (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\index.js:280:10)\n    at Function.handle (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\index.js:175:3)\n    at router (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\express\\lib\\router\\index.js:47:12)"}
-http: GET /productos/64f4b7a3ded2454e554c1ac1
-http: GET /productos/64f4b7a3ded2454e554c1ac
-error: Error al obtener el producto por ID: Cast to ObjectId failed for value "64f4b7a3ded2454e554c1ac" (type string) at path "_id" for model "producto" {"kind":"ObjectId","path":"_id","reason":{},"stack":"CastError: Cast to ObjectId failed for value \"64f4b7a3ded2454e554c1ac\" (type string) at path \"_id\" for model \"producto\"\n    at ObjectId.cast (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\schema\\objectid.js:250:11)\n    at SchemaType.applySetters (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\schematype.js:1220:12)\n    at SchemaType.castForQuery (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\schematype.js:1632:15)\n    at cast (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\cast.js:356:32)\n    at Query.cast (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\query.js:4900:12)\n    at Query._castConditions (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\query.js:2223:10)\n    at model.Query._findOne (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\query.js:2510:8)\n    at model.Query.exec (C:\\Users\\Soledad\\Desktop\\Proyecto ProductManager\\node_modules\\mongoose\\lib\\query.js:4419:28)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ProductController.getProductById (file:///C:/Users/Soledad/Desktop/Proyecto%20ProductManager/src/controllers/Products/Products.controller.js:47:23)","stringValue":"\"64f4b7a3ded2454e554c1ac\"","value":"64f4b7a3ded2454e554c1ac","valueType":"string"}
-http: POST /productos 

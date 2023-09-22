@@ -1,8 +1,9 @@
 import { config } from "dotenv";
 
 
+
 config({
-  path: `./.env.${process.env.NODE_ENV}`,
+  path: `../../.env.${process.env.NODE_ENV}`,
 });
 
 export const dbUser = process.env.DB_USER;

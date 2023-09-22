@@ -20,7 +20,18 @@ class UserDao {
   }
 
   async getAllUsers() {
-    return userModel.find();
+    return userModel.find().populate("cart");
+  }
+
+  async findUserByEmail(email) {
+    return userModel.findOne({ email });
+  }
+
+  async findOneByResetTokenAndExpiration(token, expirationDate) {
+    return userModel.findOne({
+      resetPasswordToken: token.toString(),
+      resetPasswordExpires: { $gt: expirationDate },
+    });
   }
 
   async updateUser(id, updateData) {
@@ -36,7 +47,6 @@ class UserDao {
   }
 
   async logoutUser(req) {
-    // El método `destroy` de `express-session` se usa para eliminar la sesión del usuario
     return new Promise((resolve, reject) => {
       req.session.destroy((err) => {
         if (err) {
@@ -48,7 +58,17 @@ class UserDao {
     });
   }
 
-  // Agrega más métodos según tus necesidades
+  async getPremiumDao(req, res) {
+		try {
+			const { uid } = req.params;
+			const user = userModel.findById(uid);
+			if(!user) return `User doesn't exist.`
+			return await userModel.updateOne({ _id: uid }, { role: 'premium' });
+		} catch (error) {
+			return `${error}`;
+		}
+	}
+  
 }
 
 export default UserDao;

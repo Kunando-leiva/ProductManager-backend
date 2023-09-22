@@ -13,6 +13,7 @@ import authorization from "../middlewares/auth.middleware.js";
 import  Logger  from "./Logger.Router.js";
 
 
+
 const router = express.Router();
 
 configureCors(router)
@@ -26,6 +27,7 @@ router.use('/ticket', ticketRouter);
 router.use('/mockProducts', mockProducts)
 // router.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(req, res) => { res.send(req.user); });
 router.use("/", Logger)
+
 
 router.use(errorHandler)
 

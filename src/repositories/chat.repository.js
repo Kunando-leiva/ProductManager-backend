@@ -1,4 +1,4 @@
-import chatDTO from "../DTOs/ChatDTO";
+import chatDTO from "../DTOs/ChatDTO.js";
 
 class ChatRepository {
   constructor(dao) {

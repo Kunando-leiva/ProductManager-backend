@@ -22,8 +22,11 @@ router.post("/logout", userController.logout.bind(userController));
 
 router.get("/github", passport.authenticate("github"), userController.github.bind(userController)),
 router.get("/githubcallback", passport.authenticate("github"), userController.githubCallback.bind(userController))
+router.post('/forgot-password', userController.forgotPassword);
+router.post('/reset-password/:token', userController.resetPassword);
+router.put('/premium/:uid', userController.updateUserRole);
 
-// Agrega más rutas según tus necesidades
+
 
 export default router;
 

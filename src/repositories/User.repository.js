@@ -37,6 +37,35 @@ class UserRepository {
     }
   }
 
+  async findUserByEmail(email) {
+    try {
+      const user = await this.dao.findOne({ email });
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+      return new UserDTO(user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOneByResetTokenAndExpiration(token, expirationDate) {
+    try {
+      const user = await this.dao.findOne({
+        resetPasswordToken: token.toString(),
+        resetPasswordExpires: { $gt: expirationDate },
+      });
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+      return new UserDTO(user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+
   async deleteUser(id) {
     try {
       console.log("Desde el repositorio de usuarios");
@@ -45,6 +74,14 @@ class UserRepository {
       throw error;
     }
   }
+
+  async getPremium(req, res) {
+		try {
+			return await this.dao.getPremiumDao(req, res);
+		} catch (error) {
+			return `${error}`;
+		}
+	}
 
   // Agrega más métodos según tus necesidades
 }

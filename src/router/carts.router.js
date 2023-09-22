@@ -18,7 +18,7 @@ const cartController = new CartController(cartDao, ProductDao);
 
 router.post('/', cartController.createCart.bind(cartController));
 router.get('/:cid', cartController.getCartById.bind(cartController));
-router.post('/:cid/producto/:pid', passportCall("jwt",{session:false}),authorization("user"),  cartController.addProductToCart.bind(cartController));
+router.post('/:cid/producto/:pid', passportCall("jwt",{session:false}),authorization(['admin']),  cartController.addProductToCart.bind(cartController));
 router.delete('/:cid/producto/:pid', cartController.deleteProductFromCart.bind(cartController));
 router.post('/:cid/purchase', cartController.purchaseCart);
 export default router;

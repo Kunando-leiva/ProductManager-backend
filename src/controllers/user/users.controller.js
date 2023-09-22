@@ -1,17 +1,27 @@
 import passportCall from "../../utils/passportcall.util.js";
 import { generateToken } from "../../utils/jwtUtils.js";
 import passport from "passport";
+import { v4 as uuidv4 } from 'uuid';
+import { createTransport } from "nodemailer";
+import { createHash } from "../../utils/Hash.js";
+import bcrypt from "bcrypt"
+
+
+const TEST_MAIL = "aprendisdecoder@gmail.com";
+const PASS = "jzfiofblqkoinpie"
+
+
 
 class UserController {
-  constructor(UserRepositoryIdenx) {
-    this.userRepositoryIdenx = UserRepositoryIdenx;
+  constructor(UserRepositoryIndex) {
+    this.UserRepositoryIndex = UserRepositoryIndex;
 
   }
 
   async createUser(req, res) {
     const userData = req.body;
     try {
-      const newUser = await this.userRepositoryIdenx.createUser(userData);
+      const newUser = await this.UserRepositoryIndex.createUser(userData);
       const token = generateToken(newUser); // Asegúrate de que newUser contenga los datos necesarios
       res.status(201).json({ user: newUser, token }); 
     } catch (error) {
@@ -24,7 +34,7 @@ class UserController {
 
   async getUserById(req, res) {
     const { id } = req.params;
-    const user = await this.userRepositoryIdenx.getUserById(id);
+    const user = await this.UserRepositoryIndex.getUserById(id);
     if (user) {
       res.json(user);
     } else {
@@ -35,14 +45,14 @@ class UserController {
 
 
   async getAllUsers(req, res) {
-    const users = await this.userRepositoryIdenx.getAllUsers();
+    const users = await this.UserRepositoryIndex.getAllUsers();
     res.json(users);
   }
 
   async updateUser(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    const updatedUser = await this.userRepositoryIdenx.updateUser(id, updateData);
+    const updatedUser = await this.UserRepositoryIndex.updateUser(id, updateData);
     if (updatedUser) {
       res.json(updatedUser);
     } else {
@@ -52,7 +62,7 @@ class UserController {
 
   async deleteUser(req, res) {
     const { id } = req.params;
-    const deletedUser = await this.userRepositoryIdenx.deleteUser(id);
+    const deletedUser = await this.UserRepositoryIndex.deleteUser(id);
     if (deletedUser) {
       res.json(deletedUser);
     } else {
@@ -64,7 +74,7 @@ class UserController {
     passportCall("login")(req, res, async () => {
     const { email, password } = req.body;
     try {
-      const { user, token } = await this.userRepositoryIdenx.authenticateUser(email, password);
+      const { user, token } = await this.UserRepositoryIndex.authenticateUser(email, password);
       res.json({ user, token });
     } catch (error) {
       res.status(401).json({ message: "Authentication failed" });
@@ -75,7 +85,7 @@ class UserController {
 async getUserProfile(req, res) {
   try {
     const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.userRepositoryIdenx.getUserById(userId); // Implementa este método en tu servicio
+    const userProfile = await this.UserRepositoryIndex.getUserById(userId); // Implementa este método en tu servicio
 
     if (userProfile) {
       res.json(userProfile);
@@ -90,15 +100,12 @@ async getUserProfile(req, res) {
 async getAdminProfile(req, res) {
   try {
     const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.userRepositoryIdenx.getUserById(userId); // Implementa este método en tu servicio
+    const userProfile = await this.UserRepositoryIndex.getUserById(userId); // Implementa este método en tu servicio
     if (userProfile) {
       res.json(userProfile);
     } else {
       res.status(404).json({ message: "User not found" });
     }
-    // Aquí implementa la lógica para obtener el perfil del usuario con rol "admin"
-    // Puedes utilizar el mismo método que usaste para obtener el perfil en getUserProfile
-    // y agregar lógica adicional según sea necesario.
 
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -163,6 +170,103 @@ async logout(req, res) {
     res.redirect("/");
   });
 }
+
+ forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    
+    console.log("this.UserRepositoryIndex:", this.UserRepositoryIndex); // Asegúrate de que UserRepositoryIndex esté disponible
+
+
+    const user = await this.UserRepositoryIndex.findUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado.' });
+    }
+
+    // Generar un token único para restablecer la contraseña
+    const token = uuidv4().toString();
+    user.resetPasswordToken = token.toString();
+    user.resetPasswordExpires = Date.now() + 3600000;
+    await user.save();
+
+    // Enviar correo electrónico con el enlace de restablecimiento
+    const resetLink = `http://tu-sitio-web/reset-password/${token}`;
+    const emailContent = {
+      from: TEST_MAIL,
+      to: user.email,
+      subject: 'Recuperación de contraseña',
+      html: `<p>Hola ${user.first_name},</p><p>Puedes restablecer tu contraseña <a href="${resetLink}">aquí</a>.</p>`,
+    };
+
+    // Utiliza el transporter para enviar el correo electrónico
+    const transporter = createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      auth: {
+        user: TEST_MAIL,
+        pass: PASS,
+      },
+    });
+
+    const info = await transporter.sendMail(emailContent);
+    console.log(info);
+
+    res.json({ message: 'Se ha enviado un correo con instrucciones para restablecer la contraseña.', token });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: 'Error al enviar el correo de recuperación de contraseña.' });
+  }
+}
+
+ resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    const currentDate = Date.now();
+
+    const user = await this.UserRepositoryIndex.findOneByResetTokenAndExpiration(token, currentDate);
+
+    if (!user) {
+      return res.status(400).json({ message: 'El enlace ha caducado o no es válido.' });
+    }
+
+ 
+
+    
+    // Actualizar la contraseña del usuario y limpiar los campos de restablecimiento
+    user.password = createHash(password);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Contraseña restablecida con éxito.' });
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: 'Error al restablecer la contraseña.' });
+  }
+}
+
+updateUserRole = async (req, res) => {
+  const userId = req.params.uid; // ID del usuario a actualizar
+  const newRole = req.body.newRole; // Nuevo rol ("user" o "premium")
+
+  try {
+    const user = await this.UserRepositoryIndex.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    user.role = newRole;
+    await user.save();
+
+    return res.status(200).json({ message: `Rol de usuario actualizado a ${newRole}` });
+  } catch (error) {
+    console.error('Error al actualizar el rol del usuario:', error); // Agrega esta línea para registrar el error en la consola
+    return res.status(500).json({ message: 'Error al actualizar el rol del usuario' });
+  }
+};
 
 
 
