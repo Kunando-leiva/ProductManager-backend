@@ -22,7 +22,7 @@ class TicketController {
         code,
         purchase_datetime,
         amount,
-        purchaser: purchaserObjectId, // Asigna el ObjectId del comprador
+        purchaser: purchaserObjectId,
       });
 
       const savedTicket = await newTicket.save();

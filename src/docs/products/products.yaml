@@ -1,0 +1,190 @@
+openapi: "3.1.0"
+info:
+  title: API products
+  version: "1.0"
+paths:
+  /productos:
+    post:
+      summary: "Crea un producto"
+      tags:
+        - products
+      responses:
+        "201":
+          description: "Producto creado exitosamente"
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+
+    get:
+      summary: "Obtiene todos los productos"
+      tags:
+        - products
+      responses:
+        "200":
+          description: "Lista de productos obtenida exitosamente"
+        "500":
+          description: "Error del servidor"
+
+  /productos/{id}:
+    get:
+      summary: "Obtiene un solo producto"
+      tags:
+        - products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID del producto que buscas"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "Producto encontrado"
+        "404":
+          description: "No se encontró el producto con ese ID"
+        "500":
+          description: "Error del servidor"
+
+    put:
+      summary: "Actualiza un producto"
+      tags:
+        - products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID del producto que deseas actualizar"
+          schema:
+            type: string
+            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateproduct"
+      responses:
+        "200":
+          description: "Producto actualizado"
+        "404":
+          description: "No se encontró el producto con ese ID"
+        "401":
+          description: "Se requiere autorización" 
+        "500":
+          description: "Error del servidor" 
+    delete:
+      summary: "elimina un producto"
+      tags:
+        - products
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID del producto que deseas eliminar"
+          schema:
+            type: string
+            
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/requestBodies/updateproduct"
+      responses:
+        "200":
+          description: "Producto eliminado"
+        "404":
+          description: "No se encontró el producto con ese ID"
+        "401":
+          description: "Se requiere autorización" 
+        "500":
+          description: "Error del servidor"      
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id de mongo
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: descripcion del prooductos
+        price:
+          type: number
+          description: precio del producto
+        stock:
+          type: number
+          description: unidades existentes del producto
+        category:
+          type: string
+          enum:
+            - bebida
+            - comida
+            - postre
+          description: categoria del producto  
+        code:
+          type: number
+          description: codigo de barra del producto
+        thumbnail:
+          type: string 
+          description: imagen del producto
+      example:
+        _id: 64ebc8db29b98609ef712ce1
+        title: sprite
+        description: 1.25
+        price: 250
+        stock: 100
+        category: bebida
+        code: 4
+        thumbnail:  img4
+        quantity: 1
+        id: 41f94619-df57-4d96-817b-fe5b0808fd66    
+  requestBodies:
+    updateproduct:
+      description: Body con la info del producto a actualizar
+      properties:
+        title:
+          type: string
+          description: Nombre del producto
+        description:
+          type: string
+          description: descripcion del prooductos
+        price:
+          type: number
+          description: precio del producto
+        stock:
+          type: number
+          description: unidades existentes del producto
+        category:
+          type: string
+          description: categoria del producto
+        code:
+          type: number
+          description: codigo de barra del producto
+        thumbnail: 
+           type: string
+           description: imagen del producto
+      example: 
+        _id: 64ebc8db29b98609ef712ce1
+        title: sprite
+        description: 1.25
+        price: 250
+        stock: 100
+        category: bebida
+        code: 4 
+        id: 41f94619-df57-4d96-817b-fe5b0808fd66
+      
+
+  
+
+
+

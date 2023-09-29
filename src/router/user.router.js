@@ -1,9 +1,6 @@
 import express from "express";
 import UserController from "../controllers/user/users.controller.js";
 import UserDao from "../dao/factory.user.js";
-
-import passportCall from "../utils/passportcall.util.js";
-import authorization from "../middlewares/auth.middleware.js";
 import passport from "passport";
 
 
@@ -17,7 +14,6 @@ router.post("/", passport.authenticate("login", { session: false }), userControl
 router.get("/:id", userController.getUserById.bind(userController));
 router.put("/:id", userController.updateUser.bind(userController));
 router.delete("/:id", userController.deleteUser.bind(userController));
-router.post("/authenticate", userController.authenticateUser.bind(userController));
 router.post("/logout", userController.logout.bind(userController));
 
 router.get("/github", passport.authenticate("github"), userController.github.bind(userController)),

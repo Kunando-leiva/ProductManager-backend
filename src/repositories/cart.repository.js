@@ -1,52 +1,67 @@
-import UserDTO from "../DTOs/UserDTO.js";
+import CartDTO from "../DTOs/CartDTO.js";
 
-class UserRepository {
+class CartRepository {
   constructor(dao) {
     this.dao = dao;
   }
 
-  async createUser(userInfo) {
+  async createCart(cartInfo) {
+    const { cid } = req.params;
     try {
-      console.log("Desde el repositorio de usuarios");
-      const newUserDTO = new UserDTO(userInfo);
-      
-      const user = await this.dao.createUser(newUserDTO);
-      return user; // Ajusta lo que devuelves según tus necesidades
+      const newCartDTO = new CartDTO(cartInfo);
+      const cart = await this.dao.createCart(newCartDTO);
+      return cart; 
     } catch (error) {
       throw error;
     }
   }
 
-  async getUserById(id) {
+  async getCartById(cartId) {
     try {
-      console.log("Desde el repositorio de usuarios");
-      const user = await this.dao.getUserById(id);
-      return new UserDTO(user.id, user.firstName, user.lastName, user.email, user.role);
+      const cart = await this.dao.getCartById(cartId);
+      if (!cart) {
+        throw new Error(`Cart not found with ID: ${cartId}`);
+      }
+      return new CartDTO(cart);
     } catch (error) {
       throw error;
     }
   }
 
-  async updateUser(id, updateData) {
+  async addProductToCart(cartId, productId, quantity) {
     try {
-      console.log("Desde el repositorio de usuarios");
-      const updatedUser = await this.dao.updateUser(id, updateData);
-      return new UserDTO(updatedUser.id, updatedUser.firstName, updatedUser.lastName, updatedUser.email, updatedUser.role);
+      const cart = await this.dao.addProductToCart(cartId, productId, quantity);
+      if (!cart) {
+        throw new Error(`Cart not found with ID: ${cartId}`);
+      }
+      return new CartDTO(cart);
     } catch (error) {
       throw error;
     }
   }
 
-  async deleteUser(id) {
+  async deleteProductFromCart(cartId, productId) {
     try {
-      console.log("Desde el repositorio de usuarios");
-      await this.dao.deleteUser(id);
+      const cart = await this.dao.deleteProductFromCart(cartId, productId);
+      if (!cart) {
+        throw new Error(`Cart not found with ID: ${cartId}`);
+      }
+      return new CartDTO(cart);
     } catch (error) {
       throw error;
     }
   }
 
-  // Agrega más métodos según tus necesidades
+  async getCarts() {
+    try {
+      const carts = await this.dao.getCarts();
+      return carts.map(cart => new CartDTO(cart));
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }
 
-export default UserRepository;
+export default CartRepository;

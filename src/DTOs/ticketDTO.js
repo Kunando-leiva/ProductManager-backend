@@ -1,4 +1,3 @@
-// ticket.dto.js
 class TicketDTO {
     constructor(code, purchase_datetime, amount, purchaser) {
       this.code = code;

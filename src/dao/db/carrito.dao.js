@@ -14,22 +14,22 @@ class CartDao {
 
   async addProductToCart(cartId, productId, quantity) {
     try {
-      // Obtener el carrito por su ID
+      
       const cart = await CartModel.findById(cartId);
 
       if (!cart) {
         throw new Error('Cart not found');
       }
 
-      // Verificar si el producto ya existe en el carrito
+     
       const existingProductIndex = cart.productos.findIndex(product => product.producto.equals(productId));
       
       
       if (existingProductIndex !== -1) {
-        // Si el producto ya existe en el carrito, incrementar la cantidad
+        
         cart.productos[existingProductIndex].quantity += quantity;
       } else {
-        // Si el producto no existe en el carrito, agregarlo
+       
         const newProduct = {
           producto: productId,
           quantity,
@@ -38,7 +38,7 @@ class CartDao {
         cart.productos.push(newProduct);
       }
 
-      // Guardar los cambios en el carrito
+      
       await cart.save();
 
       return cart;

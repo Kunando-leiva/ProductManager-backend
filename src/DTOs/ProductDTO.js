@@ -1,6 +1,6 @@
 class ProductDTO {
     constructor(product) {
-      this.name = product.title;
+      this.title = product.title;
       this.description = product.description;
       this.price = product.price;
       this.code = product.code.replace(/\s/g, '');

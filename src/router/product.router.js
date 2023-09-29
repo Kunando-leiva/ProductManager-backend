@@ -15,6 +15,6 @@ router.get("/", productController.getAllProducts.bind(productController));
 router.put("/:id", passportCall("jwt",{session:false}),authorization("admin"), productController.updateProduct.bind(productController));
 router.delete("/:id", passportCall("jwt",{session:false}),authorization("admin"), productController.deleteProduct.bind(productController));
 
-// Agrega más rutas según tus necesidades
+
 
 export default router;

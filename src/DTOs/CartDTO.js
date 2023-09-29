@@ -4,7 +4,7 @@ class CartDTO {
       this.products = cartData.productos.map(product => ({
         productId: product.producto._id,
         quantity: product.quantity,
-        // Agrega otros campos si es necesario
+        
       }));
     }
   }

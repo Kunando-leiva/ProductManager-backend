@@ -41,7 +41,7 @@ class ViewController {
          style:"styles.css", });
     }
 
-  // funcion para renderizar el carrito
+  
  
 
     // funcion para renderizar el realTimeProducts

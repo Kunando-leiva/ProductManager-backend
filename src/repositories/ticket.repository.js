@@ -1,5 +1,4 @@
-// ticket.repository.js
-import Ticket from '../dao/db/models/ticket.Model.js'; // Asegúrate de proporcionar la ruta correcta
+import Ticket from '../dao/db/models/ticket.Model.js'; 
 
 class TicketRepository {
   async createTicket(ticketData) {
@@ -10,9 +9,6 @@ class TicketRepository {
     return await Ticket.findById(id);
   }
 
-  // Implementa las operaciones restantes para actualizar y eliminar tickets, al igual que la lógica correspondiente.
-
-  // Puedes agregar más métodos según sea necesario.
 }
 
 export default TicketRepository;

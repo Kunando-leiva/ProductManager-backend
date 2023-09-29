@@ -17,7 +17,7 @@ const authorization = (roles) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    // Si el usuario cumple con las condiciones adecuadas, permite la acción
+    
     next();
   };
 };

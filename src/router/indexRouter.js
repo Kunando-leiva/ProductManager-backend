@@ -25,7 +25,7 @@ router.use('/chat', MessagesRouter);
 router.use('/sessions', UserRouter);
 router.use('/ticket', ticketRouter);
 router.use('/mockProducts', mockProducts)
-// router.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(req, res) => { res.send(req.user); });
+router.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(req, res) => { res.send(req.user); });
 router.use("/", Logger)
 
 

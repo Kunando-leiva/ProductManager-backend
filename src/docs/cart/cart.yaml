@@ -1,0 +1,166 @@
+openapi: "3.1.0"
+info:
+  title: API de Carrito
+  version: "1.0"
+paths:
+  /cart:
+    post:
+      summary: Crea un carrito
+      tags:
+        - cart
+      responses:
+        "201":
+          description: Carrito creado exitosamente
+
+  /cart/{cid}:
+    get:
+      summary: Obtiene el carrito
+      tags:
+        - cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito que buscas
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Carrito encontrado
+        "404":
+          description: No se encontró el carrito con ese ID
+        "500":
+          description: Error del servidor
+
+  /cart/{cid}/producto/{_id}:
+    post:
+      summary: Agrega un producto al carrito
+      tags:
+        - cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito al que deseas agregar un producto
+          schema:
+            type: string
+        - name: _id
+          in: path
+          required: true
+          description: ID del producto que deseas agregar al carrito
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cart"
+      responses:
+        "201":
+          description: Producto agregado al carrito exitosamente
+
+    delete:
+      summary: Elimina un producto del carrito
+      tags:
+        - cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito del que deseas eliminar un producto
+          schema:
+            type: string
+        - name: _id
+          in: path
+          required: true
+          description: ID del producto que deseas eliminar del carrito
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Producto eliminado exitosamente del carrito
+        "404":
+          description: No se encontró el carrito o el producto con ese ID
+        "500":
+          description: Error del servidor
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id de mongo
+        productos:
+          type: array
+          items:
+            type: object
+            properties:
+              producto:
+                type: string  
+                description: ID del producto en el carrito
+              quantity:
+                type: number
+                description: Cantidad del producto en el carrito
+        user:
+          type: string  
+          description: ID del usuario asociado al carrito
+      example:
+        cid: 6514d7b47112ac41916de0e2
+        _id: 64ebc8db29b98609ef712ce1
+        quantity: 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

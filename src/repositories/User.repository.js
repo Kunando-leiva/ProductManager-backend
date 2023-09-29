@@ -11,7 +11,7 @@ class UserRepository {
       const newUserDTO = new UserDTO(userInfo);
       
       const user = await this.dao.createUser(newUserDTO);
-      return user; // Ajusta lo que devuelves según tus necesidades
+      return user; 
     } catch (error) {
       throw error;
     }
@@ -83,7 +83,7 @@ class UserRepository {
 		}
 	}
 
-  // Agrega más métodos según tus necesidades
+ 
 }
 
 export default UserRepository;

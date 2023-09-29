@@ -1,6 +1,6 @@
 import session from "express-session";
 import MongoStore from "connect-mongo"; 
-import mongoose from "mongoose"; // Importa mongoose si aún no lo has hecho
+import mongoose from "mongoose";
 import { mongourl, key } from "../src/config/db.config.js"; 
 
 

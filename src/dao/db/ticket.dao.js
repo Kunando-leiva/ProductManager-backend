@@ -21,7 +21,7 @@ class TicketDAO {
     }
   }
 
-  // Realizar otras operaciones de acceso a la base de datos relacionadas con los tickets
+
 }
 
 export default TicketDAO;

@@ -22,7 +22,7 @@ class UserController {
     const userData = req.body;
     try {
       const newUser = await this.UserRepositoryIndex.createUser(userData);
-      const token = generateToken(newUser); // Asegúrate de que newUser contenga los datos necesarios
+      const token = generateToken(newUser); 
       res.status(201).json({ user: newUser, token }); 
     } catch (error) {
       res.status(500).json({ error: "Error creating user" });
@@ -84,9 +84,8 @@ class UserController {
 
 async getUserProfile(req, res) {
   try {
-    const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.UserRepositoryIndex.getUserById(userId); // Implementa este método en tu servicio
-
+    const userId = req.user._id; 
+    const userProfile = await this.UserRepositoryIndex.getUserById(userId); 
     if (userProfile) {
       res.json(userProfile);
     } else {
@@ -99,8 +98,8 @@ async getUserProfile(req, res) {
 
 async getAdminProfile(req, res) {
   try {
-    const userId = req.user._id; // Suponiendo que el ID del usuario está en el token JWT
-    const userProfile = await this.UserRepositoryIndex.getUserById(userId); // Implementa este método en tu servicio
+    const userId = req.user._id; 
+    const userProfile = await this.UserRepositoryIndex.getUserById(userId); 
     if (userProfile) {
       res.json(userProfile);
     } else {
@@ -126,22 +125,22 @@ async login(req, res) {
         });
       }
 
-      // Si se autenticó correctamente, genera un token JWT
+     
       const token = generateToken(user);
 
-      // Establece el token en una cookie
+      
       res.cookie('authToken', token, {
         maxAge: 1000 * 60 * 60 * 24 * 30, // 30 días de duración
         httpOnly: true,
       });
 
-      // Envía la respuesta al cliente con el token y los datos del usuario
+      
       res.json({
         status: 'success',
         access_token: token,
         user: user,
       });
-    })(req, res); // Llamada a la función de autenticación de Passport
+    })(req, res); 
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log(error);
@@ -176,7 +175,7 @@ async logout(req, res) {
     const { email } = req.body;
     
     
-    console.log("this.UserRepositoryIndex:", this.UserRepositoryIndex); // Asegúrate de que UserRepositoryIndex esté disponible
+    console.log("this.UserRepositoryIndex:", this.UserRepositoryIndex); 
 
 
     const user = await this.UserRepositoryIndex.findUserByEmail(email);
@@ -235,7 +234,7 @@ async logout(req, res) {
  
 
     
-    // Actualizar la contraseña del usuario y limpiar los campos de restablecimiento
+   
     user.password = createHash(password);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
@@ -249,8 +248,8 @@ async logout(req, res) {
 }
 
 updateUserRole = async (req, res) => {
-  const userId = req.params.uid; // ID del usuario a actualizar
-  const newRole = req.body.newRole; // Nuevo rol ("user" o "premium")
+  const userId = req.params.uid; 
+  const newRole = req.body.newRole; 
 
   try {
     const user = await this.UserRepositoryIndex.getUserById(userId);
@@ -263,7 +262,7 @@ updateUserRole = async (req, res) => {
 
     return res.status(200).json({ message: `Rol de usuario actualizado a ${newRole}` });
   } catch (error) {
-    console.error('Error al actualizar el rol del usuario:', error); // Agrega esta línea para registrar el error en la consola
+    console.error('Error al actualizar el rol del usuario:', error); 
     return res.status(500).json({ message: 'Error al actualizar el rol del usuario' });
   }
 };
@@ -278,79 +277,4 @@ export default UserController;
 
 
 
-
-// import passport from "passport";
-// import { generateToken} from "../../utils.js";
-// import passportCall from "../../utils/passportcall.util.js";
-// import  Router  from "express";
-// import e from "express";
-
-// const router= Router();
-// //  "/register",["PUBLIC"],passport.authenticate("register"),
-// const  register = async (req, res) => {
-//   passport.authenticate("register"),(err, user, info) => {
-//     if (!req.user)
-//       return res.status(400).send({
-//         status: "failed",
-//         message: "El usuario ya existe",
-//       });
-//     req.session.user = req.user;
-//     const access_token = generateToken(req.user);
-//     res.send({ status: "success", access_token, user: req.user });
-//   } 
-// }
-
-// //ruta para registrarse con github y passport
-
-
-
-
-
-// //ruta para callback de github
-
-// //ruta para registrarse con passport y jwt
-
-
-// //ruta para loguearse con passport y jwt
-// // users.post( "/login",["PUBLIC"], passport.authenticate("login"), 
-// const login = async (req, res) => {
-//   passport.authenticate("login"),(err, user, info) => {;
-//   console.log("Usuario autenticado:", req.user);
-//   if (!req.user) {
-//     console.log(req.user);
-//     return res.status(400).send({
-//       status: "failed",
-//       message: "Usuario o contraseña incorrectos",
-//     });
-//   }
-// }
- 
-//   const token = generateToken(req.user);
-//   return res.cookie("authToken", token, {maxAge: 1000 * 60 * 60 * 24 * 30, httpOnly: true})
-//             .send({ status: "success", access_token: token, user: req.user });
-// }
-
-
-
-
-// //ruta para cerrar sesion
-// // users.get("/logout",["PUBLIC"], 
-// const logout = async(req, res) => {
-//   req.logout((err) => {
-//     if (err) {
-//       return res.status(500).json({ error: "Error during logout", message: err.message });
-//     }
-//     res.clearCookie("authToken");
-//     res.redirect("/");
-    
-//   });
-// }
-
-// export default {
-//   register,
-//   githubcallback,
-//   githubCallback,
-//   login,
-//   logout
-// }
 

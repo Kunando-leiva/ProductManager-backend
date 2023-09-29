@@ -57,7 +57,7 @@ class ProductsRepository {
       }
     }
   
-    // Agrega más métodos según tus necesidades
+
   }
   
   export default ProductsRepository;

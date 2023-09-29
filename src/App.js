@@ -18,7 +18,8 @@ import mongoConnect from "../db/index.js";
 import { addLogger } from "./utils/logger.js";
 import http from "http";
 import setupSockets from "./utils/socket.js";
-import { cpus } from "os";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 
 
@@ -28,6 +29,7 @@ app.use(addLogger)
 const server = http.createServer(app);
 setupSockets(server);
 mongoConnect()
+
 
 
 app.use(morgan("dev"));
@@ -41,6 +43,18 @@ app.use(express.static(`${__dirname}/public`));
 
 const mongoIntance = MongoSingleton.getInstance();
 
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentación de AdoptMe!!!",
+      description: "La documentación de los endpoints",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+const specs = swaggerJSDoc(swaggerOptions);
+app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 
 
@@ -63,12 +77,6 @@ app.get("/test",(req,res)=>{
 app.use('/', indexeRouter);
 
 app.get("/current",passportCall("jwt",{session:false}),authorization("admin"),(req, res) => { res.send(req.user); });
-
-
-
-
-
-
 
 app.get('/operacion', (req, res) => {
  let sum = 0 ;

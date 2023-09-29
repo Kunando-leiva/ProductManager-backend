@@ -3,16 +3,13 @@ import productoModel from "./models/productModel.js";
 class productosDAO {
   constructor(){}
 
-  async createProduct(productDTO) {
+  async createProduct(productInfo) {
     console.log("mongo dao")
-    return await productoModel.create(productDTO);
+    return await productoModel.create(productInfo);
   }
 
   async getProductById(id) {
-    try {
-    } catch (error) {
-      throw error;
-    }
+    return productoModel.findById(id).lean();
   }
 
   async getAllProducts() {
@@ -27,7 +24,7 @@ class productosDAO {
     return productoModel.findByIdAndDelete(id);
   }
 
-  // Agrega más métodos según tus necesidades
+  
 }
 
 export default productosDAO;
