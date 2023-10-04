@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha test/supertestProducr.test.js --timeout 10000",
+    "test2": "mocha test/testProducts.test.js --timeout 10000",
+    "test3": "echo \"Error: no test specified\" && exit 1",
     "start": "set NODE_ENV=local && nodemon src/index.js",
     "dev": "set NODE_ENV=development && nodemon src/index.js"
   },
@@ -38,5 +40,10 @@
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.0",
     "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }

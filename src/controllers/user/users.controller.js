@@ -4,7 +4,7 @@ import passport from "passport";
 import { v4 as uuidv4 } from 'uuid';
 import { createTransport } from "nodemailer";
 import { createHash } from "../../utils/Hash.js";
-import bcrypt from "bcrypt"
+
 
 
 const TEST_MAIL = "aprendisdecoder@gmail.com";
@@ -20,15 +20,29 @@ class UserController {
 
   async createUser(req, res) {
     const userData = req.body;
+  
+    if (!userData.email) {
+      return res.status(400).json({ error: 'Correo electrónico es un campo requerido' });
+    }
+  
     try {
+      
+      const existingUser = await this.UserRepositoryIndex.findUserByEmail(userData.email);
+  
+      if (existingUser) {
+        return res.status(400).json({ message: 'El usuario ya existe' });
+      }
+  
+   
       const newUser = await this.UserRepositoryIndex.createUser(userData);
       const token = generateToken(newUser); 
       res.status(201).json({ user: newUser, token }); 
     } catch (error) {
+      console.log("Error en createUser:", error);
       res.status(500).json({ error: "Error creating user" });
     }
-
-    }
+  }
+  
 
   
 
@@ -60,15 +74,33 @@ class UserController {
     }
   }
 
-  async deleteUser(req, res) {
-    const { id } = req.params;
-    const deletedUser = await this.UserRepositoryIndex.deleteUser(id);
-    if (deletedUser) {
-      res.json(deletedUser);
-    } else {
-      res.status(404).json({ message: "User not found" });
+
+async deleteUser(req, res) {
+  const { id } = req.params;
+  try {
+
+    const userToDelete = await this.UserRepositoryIndex.getUserById(id);
+
+    if (!userToDelete) {
+      
+      return res.status(404).json({ message: "User not found" });
     }
+
+   
+    const deletedUser = await this.UserRepositoryIndex.deleteUser(id);
+
+    if (deletedUser) {
+      res.status(200).json(deletedUser);
+    } else {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  } catch (error) {
+    
+    res.status(500).json({ message: "Internal Server Error" });
   }
+}
+
+
 
   async authenticateUser(req, res) {
     passportCall("login")(req, res, async () => {
@@ -82,40 +114,12 @@ class UserController {
   })
 }
 
-async getUserProfile(req, res) {
-  try {
-    const userId = req.user._id; 
-    const userProfile = await this.UserRepositoryIndex.getUserById(userId); 
-    if (userProfile) {
-      res.json(userProfile);
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async getAdminProfile(req, res) {
-  try {
-    const userId = req.user._id; 
-    const userProfile = await this.UserRepositoryIndex.getUserById(userId); 
-    if (userProfile) {
-      res.json(userProfile);
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-}
 
 async login(req, res) {
   try {
     passport.authenticate('login', (err, user, info) => {
       if (err) {
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ status: 'failed', message: err.message });
       }
 
       if (!user) {
@@ -125,27 +129,25 @@ async login(req, res) {
         });
       }
 
-     
       const token = generateToken(user);
 
-      
       res.cookie('authToken', token, {
         maxAge: 1000 * 60 * 60 * 24 * 30, // 30 días de duración
         httpOnly: true,
       });
 
-      
-      res.json({
+      res.status(200).json({
         status: 'success',
         access_token: token,
         user: user,
       });
-    })(req, res); 
+    })(req, res);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ status: 'failed', message: error.message });
     console.log(error);
   }
 }
+
 
 
 

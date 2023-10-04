@@ -90,26 +90,3 @@ const errorLogger = winston.createLogger({
     next(err);
   };
   
-  
-  // const logger = winston.createLogger({
-  //     levels:customLevelOptions.levels,
-  //     transports: [
-  //         new winston.transports.Console({
-  //         level:"info", 
-  //         format: winston.format.combine(
-  //         winston.format.colorize({colors: customLevelOptions.colors}), 
-  //         winston.format.simple())
-  //     }),
-  //         new winston.transports.File({
-  //             filename:"./error.log", 
-  //             level:"warning",
-  //             format:winston.format.simple()
-  // })
-  //     ]
-  // })
-  
-  // export const addLogger = (req, res, next) => {
-  //     req.logger = logger
-  //     // req.logger.http(`${req.method} ${req.url}`)
-  //     next();
-  // }

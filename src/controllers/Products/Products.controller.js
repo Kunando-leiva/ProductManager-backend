@@ -10,16 +10,14 @@ class ProductController {
 
   async createProduct(req, res) {
     try {
-      
       const { title, description, price, category, stock, code, thumbnail } = req.body;
-
-     
-      if (!title || !description || !price || !category || !stock || !code || !thumbnail) {
-        req.logger.error('Faltan datos en la solicitud'); 
-        return res.status(400).json({ status: addErrorLogger, message: errorMessages.validationError() });
+  
+   
+      if (!title || !description || isNaN(price) || isNaN(stock) || !code || !thumbnail) {
+        req.logger.error('Faltan datos en la solicitud o los datos son inválidos'); 
+        return res.status(400).json({ status: 'error', message: 'Datos de producto incorrectos' });
       }
-
-      
+  
       const newProduct = {
         title,
         description,
@@ -29,16 +27,26 @@ class ProductController {
         code,
         thumbnail,
       };
-
-      
+  
       const createdProduct = await this.productsRepositoryIndex.createProduct(newProduct);
-
-      res.status(201).json( createdProduct);
+  
+      const responsePayload = {
+        payload: createdProduct,
+      };
+      res.status(201).json(responsePayload);
     } catch (error) {
-      req.logger.error('Error al crear el producto:', error); 
-      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
+      if (error.name === 'ValidationError') {
+        
+        req.logger.error('Error de validación al crear el producto:', error.message); 
+        res.status(400).json({ status: 'error', message: error.message });
+      } else {
+
+        req.logger.error('Error al crear el producto:', error); 
+        res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+      }
     }
   }
+  
 
   async getProductById(req, res) {
     const { id } = req.params;
@@ -70,29 +78,29 @@ class ProductController {
   async updateProduct(req, res) {
     const { id } = req.params;
     const updateData = req.body;
-    console.log("requser", req.user)
+    console.log("requser", req.user);
     const userId = req.user.id;
-     
-
+  
     try {
-        const product = await this.productsRepositoryIndex.getProductById(id);
-
-        if (!product) {
-            return res.status(404).json({ message: "Producto no encontrado" });
-        }
-
-        if (req.user.role === "admin" || (req.user.role === "premium" && product.owner === userId)) {
-            const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
-            res.json(updatedProduct);
-        } else {
-            req.logger.error(`No tienes permiso para actualizar este producto.`);
-            res.status(403).json({ message: "No tienes permiso para actualizar este producto" });
-        }
+      const product = await this.productsRepositoryIndex.getProductById(id);
+  
+      if (!product) {
+        return res.status(404).json({ message: "Producto no encontrado" });
+      }
+  
+      if (req.user.role === "admin" || (req.user.role === "premium" && product.owner === userId)) {
+        const updatedProduct = await this.productsRepositoryIndex.updateProduct(id, updateData);
+        res.json({ message: "Producto actualizado correctamente", updatedProduct }); // Devuelve el mensaje y el producto actualizado
+      } else {
+        req.logger.error(`No tienes permiso para actualizar este producto.`);
+        res.status(403).json({ message: "No tienes permiso para actualizar este producto" });
+      }
     } catch (error) {
-        req.logger.error('Error al actualizar el producto:', error);
-        res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
+      req.logger.error('Error al actualizar el producto:', error);
+      res.status(500).json({ status: 'error', message: errorMessages.internalServerError });
     }
-}
+  }
+  
 
 async deleteProduct(req, res) {
   const { id } = req.params;

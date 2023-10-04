@@ -1,7 +1,7 @@
 import TicketModel from './models/ticket.Model.js'; // Ajusta la ruta a donde tengas el modelo TicketModel
 
 class TicketDAO {
-  // Crear un nuevo ticket en la base de datos
+
   static async createTicket(ticketData) {
     try {
       const newTicket = await TicketModel.create(ticketData);
@@ -11,7 +11,7 @@ class TicketDAO {
     }
   }
 
-  // Obtener información de un ticket por su código
+  
   static async getTicketByCode(code) {
     try {
       const ticket = await TicketModel.findOne({ code });

@@ -1,5 +1,5 @@
 import express from 'express';
-import mockProducts from '../mocking.js'; 
+import mockProducts from '../controllers/Pruebas/mocking.js'; 
 
 const mockingRouter = express.Router();
 

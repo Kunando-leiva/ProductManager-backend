@@ -61,7 +61,7 @@ class ViewController {
     }
 
     
-// funcion para renderizar el carrito
+
   async getCart(req, res) {
     const products = await this.cartDao.getCart(req.user.id);
     res.render("cart", { products });

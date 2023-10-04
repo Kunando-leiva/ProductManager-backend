@@ -11,7 +11,7 @@ function errorHandler(err, req, res, next) {
     } else if (err.name === 'PermissionError') {
         res.status(403).json({ error: 'Permiso denegado' });
     }  else {
-      res.status(500).json({ error: 'Error al crear/obtener el producto' });
+      res.status(500).json({ error: 'Internal Server Error' });
     }
     
   }

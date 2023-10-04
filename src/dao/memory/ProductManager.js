@@ -52,7 +52,7 @@ class productManager {
     this.GuardarData();
   }
 
-  // Agrega más métodos según tus necesidades
+
 }
 
 export default productManager;

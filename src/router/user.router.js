@@ -9,6 +9,7 @@ const router = express.Router();
 
 const userController = new UserController(UserDao);
 
+router.get("/", userController.getAllUsers.bind(userController));
 router.post("/register", userController.createUser.bind(userController)), async (req, res) => {res.redirect("/login")}
 router.post("/", passport.authenticate("login", { session: false }), userController.login);
 router.get("/:id", userController.getUserById.bind(userController));

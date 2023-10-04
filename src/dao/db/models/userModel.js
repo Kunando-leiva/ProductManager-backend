@@ -12,9 +12,10 @@ const userSchema = new mongoose.Schema({
     cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'carritos' }],
     role: { 
         type: String, 
-        enum: ['user', 'admin', 'premium'], 
+        enum: ['user', 'admin', 'premium'],
+        token: { type: String }, 
     },
-    token: { type: String },
+    
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date }, 
 

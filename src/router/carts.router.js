@@ -7,14 +7,8 @@ import passportCall from '../utils/passportcall.util.js';
 import authorization from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
-
-
-
 const productDao = new ProductDao();
-
-
 const cartController = new CartController(CartDao, productDao);
-
 
 
 router.post('/', cartController.createCart.bind(cartController));
