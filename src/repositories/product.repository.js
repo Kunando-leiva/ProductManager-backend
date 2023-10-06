@@ -12,7 +12,7 @@ class ProductsRepository {
         const newProductInfo = new ProductDTO(productInfo);
   
         const product = await this.dao.createProduct(newProductInfo);
-        return ("producto reposi",product); // Ajusta lo que devuelves según tu necesidad
+        return ("producto reposi",product); 
       } catch (error) {
         throw error;
       }
@@ -52,6 +52,16 @@ class ProductsRepository {
       try {
         console.log("Desde el repositorio de productos");
         await this.dao.deleteProduct(id);
+      } catch (error) {
+        throw error;
+      }
+    }
+
+
+    async getProductByCode(code) {
+      try {
+        const product = await productoModel.findOne({ code }).lean();
+        return product;
       } catch (error) {
         throw error;
       }
