@@ -7,7 +7,11 @@ const productoCollection = "producto";
 
 
 const productoSchema = new mongoose.Schema({
-    id: { type: String, required: true, default: uuidv4 },
+    id: { type: String,
+        required: true,
+        default: async function() {
+            return uuidv4();
+        } },
     title: { type: String,  max: 100 },
     description: { type: String,  max: 100 },
     price: { type: Number,},

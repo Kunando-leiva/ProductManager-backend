@@ -1,48 +1,24 @@
-<h1>{{data.description}}</h1>
-
-{{#if isAdmin}}
-    <p>Bienvenido, eres un usuario administrador.</p>
+{{#if user}}
+  <p>BIENVENIDO: {{user.first_name}} {{user.last_name}}</p>
 {{else}}
-    <p>Bienvenido, eres un usuario regular.</p>
+  <p>Usuario no encontrado</p>
 {{/if}}
 
-<h2>Lista de productos</h2>
+<h2>Lista de Productos</h2>
+<ul>
+    {{#each products}}
+        <li>
+            {{this.title}} - {{this.description}} - ${{this.price}} ({{this.stock}} unidades)
+            <form class='product-form' cart="{{../cart}}" product="{{this._id}}">
+                <input type='submit' value='Agregar al Carrito' class="product-button" />
+            </form>
+        </li>
+    {{/each}}
+</ul>
 
-{{#if productos}}
-    <ul>
-        {{#each productos}}
-            <li>
-                <strong>{{this.title}}</strong> - {{this.description}} - ${{this.price}}
-            </li>
-        {{/each}}
-    </ul>
+<a href="/carrito/{{user._id}}" class="button">Ir al Carrito</a>
+<a href="/menu" class="button">Volver al Menú</a>
 
-    <div>
-        {{#if hasPrevPage}}
-            <a href="/home.handlebars?page={{prevPage}}">Anterior</a>
-        {{/if}}
 
-        <h3 class="text">Página: {{currentPage}} de {{totalPages}}</h3>
-
-        {{#if hasNextPage}}
-            <a href="/home.handlebars?page={{nextPage}}">Siguiente</a>
-        {{/if}}
-    </div>
-{{else}}
-    <p>No hay productos disponibles.</p>
-{{/if}}
-
-<form action="/home.handlebars" method="GET">
-    <label for="categoria">Selecciona una categoría:</label>
-    <select name="query" id="categoria">
-        <option value="bebida">Bebida</option>
-        <option value="comida">Comida</option>
-        <option value="postre">Postre</option>
-    </select>
-    <button type="submit">Filtrar</button>
-</form>
-
-<a href="/menu" class="button">volver al menu</a>
-
-    <script src="./socket.io/socket.io.js"></script>
-    <script src="/js/index.js"></script>
+<script src="addProductToCart.js"></script>
+<script src="/js/index.js"></script>

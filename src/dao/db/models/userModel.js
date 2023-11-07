@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { token } from "morgan";
+import AutoPopulate from "mongoose-autopopulate";
+
 
 const collectionUsers = "Users";
 
@@ -13,13 +14,21 @@ const userSchema = new mongoose.Schema({
     role: { 
         type: String, 
         enum: ['user', 'admin', 'premium'],
-        token: { type: String }, 
     },
+    token: { type: String }, 
     
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date }, 
+    documents: [
+        {
+            name: String,
+            reference: String,
+        }
+    ],
+    last_connection: { type: Date },
 
 });
+userSchema.plugin(AutoPopulate);
 
 const userModel = mongoose.model(collectionUsers, userSchema);
 

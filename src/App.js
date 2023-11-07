@@ -15,6 +15,7 @@ import http from "http";
 import setupSockets from "./utils/socket.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+import multer from "multer";
 
 
 
@@ -29,14 +30,14 @@ app.set("view engine", "handlebars");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
-
+app.use(multer().any());
 const mongoIntance = MongoSingleton.getInstance();
 
 const swaggerOptions = {
   definition: {
     openapi: "3.0.1",
     info: {
-      title: "Documentación de AdoptMe!!!",
+      title: "Documentación Proyecto Backend!!!",
       description: "La documentación de los endpoints",
     },
   },
@@ -58,6 +59,7 @@ app.use(passport.session())
 app.use(cors())
 
 app.use('/', indexeRouter);
+
 
 export default app;
 

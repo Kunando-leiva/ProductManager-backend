@@ -1,14 +1,15 @@
 import CartModel from "./models/cartsModel.js";
-import ProductModel from "./models/productModel.js";
+
 
 class CartDao {
   async createCart(cartData) {
-    const newCart = await CartModel.create(cartData);
+    const newCart = await new CartModel().save();
+
     return newCart;
   }
 
   async getCartById(cartId) {
-    const cart = await CartModel.findById(cartId).populate('productos.producto');
+    const cart = await CartModel.findById(cartId).lean().populate('productos.producto');
     return cart;
   }
 
@@ -60,10 +61,7 @@ class CartDao {
     return updatedCart;
   }
 
-  async getCarts() {
-    const carts = await CartModel.find().populate('productos.producto');
-    return carts;
-  }
+
 }
 
 export default CartDao;

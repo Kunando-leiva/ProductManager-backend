@@ -1,14 +1,16 @@
 class ProductDTO {
-    constructor(product) {
-      this.title = product.title;
-      this.description = product.description;
-      this.price = product.price;
-      this.code = product.code.replace(/\s/g, '');
-      this.category = product.category;
-      this.stock = product.stock;
-      this.status = true; 
-     console.log("Usando el DTO de producto"); 
-    }
+  constructor(productos) {
+    this.id = productos._id;
+    this.title = productos.title;
+    this.description = productos.description;
+    this.price = productos.price;
+    this.code = productos.code;
+    this.category = productos.category;
+    this.stock = productos.stock;
+    this.status = true;
+    this.quantity = 1
+   
   }
-  
-  export default ProductDTO;
+}
+
+export default ProductDTO;

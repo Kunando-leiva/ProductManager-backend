@@ -1,7 +1,7 @@
 <h1>Real-Time Products</h1>
   
   <!-- Formulario para crear un nuevo producto -->
-  <form method="POST" action="/sessions/realTimeProducts">
+  <form method="POST" action="/productos" name="productForm">
     <input type="text" name="title" placeholder="Título" required>
     <input type="text" name="description" placeholder="Descripción" required>
     <input type="number" name="price" placeholder="Precio" required>
@@ -10,12 +10,12 @@
     <input type="text" name="code" placeholder="Código" required>
     <input type="number" name="stock" placeholder="Stock" required>
 
-    <button type="crearProducto">Crear Producto</button>
+     <button type="submit">Crear Producto</button>
   </form>
   
   <!-- Lista de productos -->
   <ul id="productos-list">
-    {{#each productos}}
+    {{#each products}}
       <li>
         <h2>{{this.title}}</h2>
         <p>{{this.description}}</p>
@@ -26,7 +26,7 @@
         <p>Stock: {{this.stock}}</p>
         <p>Id: {{this._id}}</p>
 
-        <button class="delete-btn" data-id="{{this._id}}">Eliminar</button>
+        <button onclick="deleteProduct('{{this._id}}')">Eliminar</button>
         <button class="edit-btn" data-id="{{this._id}}">Editar</button>
       </li>
     {{/each}}
@@ -34,19 +34,12 @@
 
   <a href="/menu" class="button">volver al menu</a>
 
-   <div class='product-container'>
-	<div class='product-item'>
-		<p>Product: {{product.title}}</p>
-		<p>Description: {{product.description}}</p>
-		<p>Price: ${{product.price}}</p>
-		<p>Stock: {{product.stock}}</p>
-		<p>Category: {{product.category}}</p>
-	</div>
-
 	<form class='product-form' cart='{{cart}}' product='{{product._id}}'>
 		<input type='submit' value='Add to cart' class='product-button' />
 	</form>
 
 </div>
-
+ <script src="./socket.io/socket.io.js"></script>
+<script src="/js/deleteProduct.js"></script>
+<script src="/js/index.js"></script>
 <script src='/js/products.js'></script>

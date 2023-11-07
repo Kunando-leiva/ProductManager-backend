@@ -1,8 +1,8 @@
-import TicketRepository from '../../repositories/ticket.repository.js'; 
+import TicketRepository from '../../repositories/ticket.repository.js';
 import UserDao from '../../dao/db/users.dao.js';
 import mongoose from 'mongoose';
-import User from '../../dao/db/users.dao.js'; 
-import Ticket from '../../dao/db/ticket.dao.js'; 
+import User from '../../dao/db/users.dao.js';
+import Ticket from '../../dao/db/ticket.dao.js';
 import TicketModel from "../../dao/db/models/ticket.Model.js"
 
 class TicketController {
@@ -15,7 +15,6 @@ class TicketController {
     try {
       const { code, purchase_datetime, amount, purchaserId } = req.body;
 
-      
       const purchaserObjectId = new mongoose.Types.ObjectId(purchaserId);
 
       const newTicket = new TicketModel({
@@ -25,7 +24,7 @@ class TicketController {
         purchaser: purchaserObjectId,
       });
 
-      const savedTicket = await newTicket.save();
+      const savedTicket = await this.ticketRepository.createTicket(newTicket); // Utilizar el método del repositorio para crear el ticket
       res.status(201).json(savedTicket);
     } catch (error) {
       console.error("Error al crear el ticket:", error);
@@ -38,16 +37,12 @@ class TicketController {
       const { userId } = req.body;
       const ticketId = req.params.tid;
 
-      const user = await User.findById(userId);
+      const user = await this.userDao.getUserById(userId); // Utilizar el método del DAO para obtener al usuario
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const updatedTicket = await Ticket.findByIdAndUpdate(
-        ticketId,
-        { purchaser: user._id },
-        { new: true }
-      ).populate("purchaser"); 
+      const updatedTicket = await this.ticketRepository.addUserToTicket(ticketId, user._id); // Utilizar el método del repositorio para agregar al usuario al ticket
 
       if (updatedTicket) {
         res.json(updatedTicket);

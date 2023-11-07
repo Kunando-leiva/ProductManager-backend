@@ -8,7 +8,6 @@ const  passportCall = (strategy) => {
              return res.status(401)
              .send({error:info.message ? info.message :"no autorizado (en passportCall)"});
         req.user = user;
-        console.log("req.user", req.user);
         next();
     })(req, res, next)}
 }

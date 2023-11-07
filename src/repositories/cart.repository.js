@@ -1,28 +1,27 @@
-import CartDTO from "../DTOs/CartDTO.js";
+import cartInfo from "../dao/db/carrito.dao.js"
+
+import ProductsDao from '../dao/db/productos.dao.js';
 
 class CartRepository {
-  constructor(dao) {
-    this.dao = dao;
+  constructor() {
+    this.cartInfo = new cartInfo();
+    this.productsDao = new ProductsDao();
   }
 
-  async createCart(cartInfo) {
-    const { cid } = req.params;
-    try {
-      const newCartDTO = new CartDTO(cartInfo);
-      const cart = await this.dao.createCart(newCartDTO);
-      return cart; 
-    } catch (error) {
-      throw error;
-    }
+  async createCart(userId) {
+    cartInfo.user = userId;
+    return this.cartInfo.createCart(cartInfo);
   }
+  
+  
 
   async getCartById(cartId) {
     try {
-      const cart = await this.dao.getCartById(cartId);
+      const cart = await this.cartInfo.getCartById(cartId);
       if (!cart) {
         throw new Error(`Cart not found with ID: ${cartId}`);
       }
-      return new CartDTO(cart);
+      return cart;
     } catch (error) {
       throw error;
     }
@@ -30,11 +29,11 @@ class CartRepository {
 
   async addProductToCart(cartId, productId, quantity) {
     try {
-      const cart = await this.dao.addProductToCart(cartId, productId, quantity);
+      const cart = await this.cartInfo.addProductToCart(cartId, productId, quantity);
       if (!cart) {
         throw new Error(`Cart not found with ID: ${cartId}`);
       }
-      return new CartDTO(cart);
+      return cart;
     } catch (error) {
       throw error;
     }
@@ -42,26 +41,35 @@ class CartRepository {
 
   async deleteProductFromCart(cartId, productId) {
     try {
-      const cart = await this.dao.deleteProductFromCart(cartId, productId);
+      // Verificar si el carrito existe
+      const cart = await this.cartDao.getCartById(cartId);
       if (!cart) {
-        throw new Error(`Cart not found with ID: ${cartId}`);
+        return { status: 'error', message: `Cart not found with ID: ${cartId}` };
       }
-      return new CartDTO(cart);
+
+      // Verificar si el producto existe
+      const product = await this.productsDao.getProductById(productId);
+      if (!product) {
+        return { status: 'error', message: `Product not found with ID: ${productId}` };
+      }
+
+      // Eliminar el producto del carrito
+      const updatedCart = await this.cartDao.deleteProductFromCart(cartId, productId);
+
+      return { status: 'success', message: 'Product removed from cart', updatedCart };
     } catch (error) {
-      throw error;
+      return { status: 'error', message: 'Error deleting product from cart', error: error.message };
     }
   }
 
   async getCarts() {
     try {
-      const carts = await this.dao.getCarts();
-      return carts.map(cart => new CartDTO(cart));
+      const carts = await this.cartInfo.getCarts();
+      return carts;
     } catch (error) {
       throw error;
     }
   }
-
-
 }
 
 export default CartRepository;

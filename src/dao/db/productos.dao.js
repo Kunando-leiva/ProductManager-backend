@@ -9,7 +9,7 @@ class productosDAO {
   }
 
   async getProductById(id) {
-    return productoModel.findById(id).lean();
+    return productoModel.findById(id);
   }
 
   async getAllProducts() {
@@ -22,6 +22,15 @@ class productosDAO {
 
   async deleteProduct(id) {
     return productoModel.findByIdAndDelete(id);
+  }
+
+  async getProductByCode(code) {
+    try {
+      const product = await productoModel.findOne({ code }).lean();
+      return product;
+    } catch (error) {
+      throw error;
+    }
   }
 
   

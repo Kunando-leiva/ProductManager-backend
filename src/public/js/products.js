@@ -1,19 +1,33 @@
-import logger from "../../utils/logger.util.js";
+document.addEventListener("DOMContentLoaded", function () {
+    const productForm = document.querySelector("form[name='productForm']");
 
-const productsForm = document.querySelectorAll('.product-form');
+    productForm.addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-productsForm.forEach((productForm) => {
-	productForm.addEventListener('submit', (e) => {
-		e.preventDefault();
-		const cart = productForm.getAttribute('cart');
-		const product = productForm.getAttribute('product');
-		fetch(`/cart/${cart}/producto/${product}`, {
-			method: 'POST',
-		})
-			.then(res => {
-				if (res.status !== 200) return;
-				alert('Added');
-			})
-			.catch(err => logger.error(`Catch error: ${err}`))
-	});
-});
+      // Recopila los datos del formulario
+      const formData = new FormData(productForm);
+      const obj = {};
+      formData.forEach((value, key) => (obj[key] = value));
+
+      try {
+        const response = await fetch("/productos", {
+          method: "POST",
+          body: JSON.stringify(obj),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 201) {
+          alert("Producto creado exitosamente");
+          window.location.reload(); // Recarga la página para reflejar los cambios
+        } else {
+          const data = await response.json();
+          alert("Error al crear el producto: " + data.message);
+        }
+      } catch (error) {
+        console.error("Error al enviar el formulario:", error);
+      }
+    });
+  });
+  

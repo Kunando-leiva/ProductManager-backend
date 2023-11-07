@@ -1,27 +1,29 @@
-<h1>Carritos</h1>
+<head>
+    <title>Carrito de Compras</title>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+    
+     <p>Usuario: {{user}}</p>
+    <table>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+        </tr>
+        {{#each cart.productos}}
+            <tr>
+                <td>{{this.producto.title}}</td>
+                <td>{{this.quantity}}</td>
+            </tr>
+        {{/each}}
+    </table>
+</body>
 
-{{#if carritos.length}}
-  <ul>
-    {{#each carritos}}
-      <li>
-        <h2>ID: {{this._id}}</h2>
-        <p>Usuario: {{this.user}}</p>
-        <p>Productos:{{this.price }}</p>
-        <ul>
-          {{#each this.products}}
-            <li>{{this.title}} (Cantidad: {{this.quantity}})</li>
-          {{/each}}
-        </ul>
-      </li>
-    {{/each}}
-  </ul>
-{{else}}
-  <p>No hay carritos disponibles.</p>
-{{/if}}
+<a href="#" class="button" onclick="addProductToCart(cid, _id)">Agregar Producto</a>
 
-  <a href="/realTimeProducts" class="button">Agregar Producto</a>
-  <a href="/vaciar-carrito" class="button">Vaciar Carrito</a>
-  <a href="/menu" class="button">volver al menu</a>
+<a href="/vaciar-carrito" class="button">Vaciar Carrito</a>
+<a href="/menu" class="button">Volver al Menú</a>
 
-  <script src="./socket.io/socket.io.js"></script>
-  <script src="/js/index.js"></script>
+<script src="./socket.io/socket.io.js"></script>
+<script src="/css/cart.css"></script>
+<script src="/js/index.js"></script>

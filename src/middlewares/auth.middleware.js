@@ -1,26 +1,22 @@
 const authorization = (roles) => {
-  return async (req, res, next) => {
-    console.log("Usuario autenticado:", req.user);
+  return (req, res, next) => {
+    const user = req.user; // Obtén el usuario autenticado desde req.user
 
-    if (!req.user) {
-      return res.status(401).json({ message: "Unauthorized en auth.middleware" });
+    if (!user) {
+      return res.status(401).json({ message: "No autorizado" });
     }
 
-    // Verifica si el usuario es admin (puede borrar cualquier producto o realizar la acción)
-    if (req.user.role === 'admin') {
-      return next();
+    if (roles.includes(user.role) || user.role === "admin") {
+      // Si el usuario tiene el rol adecuado o es admin, permite el acceso
+      next();
+    } else {
+      return res.status(403).json({ message: "Acceso prohibido" });
     }
-
-    // Verifica si el usuario tiene el rol adecuado
-    if (!roles.includes(req.user.role)) {
-      console.log(`Usuario de rol ${req.user.role} no autorizado.`);
-      return res.status(403).json({ message: "Forbidden" });
-    }
-
-    
-    next();
   };
 };
 
 export default authorization;
+
+
+
 
