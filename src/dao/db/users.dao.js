@@ -43,7 +43,7 @@ class UserDao {
 
   async deleteUser(id) {
     try {
-        const result = await userModel.findByIdAndDelete(id); // Utiliza el método findByIdAndDelete de Mongoose
+        const result = await userModel.findByIdAndDelete(id); 
         if (!result) {
             throw new Error('Usuario no encontrado');
         }
@@ -97,7 +97,7 @@ class UserDao {
 
   async findInactiveUsers(deadline) {
     try {
-      // Buscar usuarios inactivos
+     
       const inactiveUsers = await userModel.find({
         last_connection: { $lt: new Date(deadline) },
       });

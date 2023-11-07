@@ -1,5 +1,4 @@
-import TicketModel from './models/ticket.Model.js'; // Ajusta la ruta a donde tengas el modelo TicketModel
-
+import TicketModel from './models/ticket.Model.js'; 
 class TicketDAO {
 
   static async createTicket(ticketData) {

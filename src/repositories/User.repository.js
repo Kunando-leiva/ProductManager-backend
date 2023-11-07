@@ -29,18 +29,18 @@ class UserRepository {
   
   async getUserById(id) {
     try {
-      console.log("Buscando usuario con _id:", id); // Agrega este registro de depuración
+      console.log("Buscando usuario con _id:", id); 
       const user = await this.dao.getUserById(id);
       
       if (user) {
-        console.log("Usuario encontrado:", user); // Registra el usuario si se encuentra
+        console.log("Usuario encontrado:", user); 
         return new UserDTO(user);
       } else {
-        console.log("Usuario no encontrado"); // Registra un mensaje si no se encuentra
+        console.log("Usuario no encontrado"); 
         return null;
       }
     } catch (error) {
-      console.error("Error al buscar usuario por _id:", error); // Registra cualquier error
+      console.error("Error al buscar usuario por _id:", error); 
       throw error;
     }
   }
@@ -92,10 +92,10 @@ class UserRepository {
 
   async deleteUser(id) {
     try {
-        console.log("Eliminando usuario con ID:", id); // Agrega registro de depuración
+        console.log("Eliminando usuario con ID:", id); 
         await this.dao.deleteUser(id);
     } catch (error) {
-        console.error('Error al eliminar el usuario:', error); // Agrega registro de depuración
+        console.error('Error al eliminar el usuario:', error); 
         throw error;
     }
 }
@@ -113,16 +113,16 @@ class UserRepository {
 
   async updateRole(id, newRole) {
     try {
-      const user = await this.dao.getUserById(id); // Obtener el usuario por ID
+      const user = await this.dao.getUserById(id); 
 
       if (!user) {
         throw new Error("Usuario no encontrado");
       }
 
       user.role = newRole; // Actualizar el rol
-      const updatedUser = await this.dao.updateUser(id, user); // Actualizar el usuario en la base de datos
+      const updatedUser = await this.dao.updateUser(id, user); 
 
-      return new UserDTO(updatedUser); // Devolver el usuario actualizado
+      return new UserDTO(updatedUser); 
     } catch (error) {
       throw error;
     }
@@ -130,7 +130,7 @@ class UserRepository {
 
   async findInactiveUsers(deadline) {
     try {
-      // Consulta la base de datos para encontrar usuarios inactivos
+      
       const inactiveUsers = await this.dao.findInactiveUsers({
         last_connection: { $lt: new Date(deadline) }, 
       });

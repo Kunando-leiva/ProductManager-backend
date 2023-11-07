@@ -41,19 +41,17 @@ class CartRepository {
 
   async deleteProductFromCart(cartId, productId) {
     try {
-      // Verificar si el carrito existe
+     
       const cart = await this.cartDao.getCartById(cartId);
       if (!cart) {
         return { status: 'error', message: `Cart not found with ID: ${cartId}` };
       }
 
-      // Verificar si el producto existe
       const product = await this.productsDao.getProductById(productId);
       if (!product) {
         return { status: 'error', message: `Product not found with ID: ${productId}` };
       }
 
-      // Eliminar el producto del carrito
       const updatedCart = await this.cartDao.deleteProductFromCart(cartId, productId);
 
       return { status: 'success', message: 'Product removed from cart', updatedCart };

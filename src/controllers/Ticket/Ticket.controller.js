@@ -24,7 +24,7 @@ class TicketController {
         purchaser: purchaserObjectId,
       });
 
-      const savedTicket = await this.ticketRepository.createTicket(newTicket); // Utilizar el método del repositorio para crear el ticket
+      const savedTicket = await this.ticketRepository.createTicket(newTicket); 
       res.status(201).json(savedTicket);
     } catch (error) {
       console.error("Error al crear el ticket:", error);
@@ -37,12 +37,12 @@ class TicketController {
       const { userId } = req.body;
       const ticketId = req.params.tid;
 
-      const user = await this.userDao.getUserById(userId); // Utilizar el método del DAO para obtener al usuario
+      const user = await this.userDao.getUserById(userId); 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
 
-      const updatedTicket = await this.ticketRepository.addUserToTicket(ticketId, user._id); // Utilizar el método del repositorio para agregar al usuario al ticket
+      const updatedTicket = await this.ticketRepository.addUserToTicket(ticketId, user._id); 
 
       if (updatedTicket) {
         res.json(updatedTicket);

@@ -21,7 +21,7 @@ class ProductsRepository {
     try {
       console.log("Desde el repositorio de productos");
       const product = await this.dao.getProductById(id);
-      return product; // Devuelve el documento de Mongoose sin envolverlo en un DTO
+      return product; 
     } catch (error) {
       throw error;
     }

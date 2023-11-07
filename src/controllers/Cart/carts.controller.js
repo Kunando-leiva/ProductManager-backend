@@ -17,10 +17,10 @@ class CartController {
     const cartData = { productos: products, user };
     try {
       const newCart = await this.cartRepositoryIndex.createCart(cartData);
-      // Modificar el objeto JSON de respuesta para incluir el ID del usuario
+      
       const response = {
-        ...newCart._doc, // Copia todos los campos del carrito
-        userId: user,     // Agrega el ID del usuario
+        ...newCart._doc, 
+        userId: user,     
       };
       res.status(201).json(response);
     } catch (error) {
@@ -66,18 +66,17 @@ async addProductToCart(req, res) {
       return res.status(404).json({ status: 'error', message: 'No se encontró el producto' });
     }
 
-    // Verificar si hay suficiente stock disponible
+   
     if (product.stock < quantity) {
       return res.status(400).json({ status: 'error', message: 'No hay suficiente stock disponible' });
     }
 
-    // Restar la cantidad del producto del stock del producto
+    
     product.stock -= quantity;
 
-    // Guardar la actualización del stock en la base de datos
+    
     await this.productsRepositoryIndex.updateProduct(id, { stock: product.stock });
 
-    // Agregar el producto al carrito
     const cart = await this.cartRepositoryIndex.addProductToCart(cid, id, quantity);
 
     if (!cart) {
@@ -107,10 +106,10 @@ deleteProductFromCart = async (req, res) => {
       return res.status(404).json({ status: 'error', message: 'No se encontró el carrito' });
     }
 
-    // Filtrar el producto que se desea eliminar
+    
     carrito.productos = carrito.productos.filter((item) => item.producto.toString() !== id);
 
-    // Acceder al producto en la base de datos
+    
     console.log("productoaa", id)
     const product = await this.productsRepositoryIndex.getProductById(id)
 
@@ -118,14 +117,14 @@ deleteProductFromCart = async (req, res) => {
       return res.status(404).json({ status: 'error', message: 'No se encontró el producto' });
     }
 
-    // Realizar la resta de cantidad
-    if (product instanceof productoModel) { // Asegurarte de que "product" sea un documento de Mongoose del modelo de productos
+    
+    if (product instanceof productoModel) { 
       if (product.stock >= 1) {
-        product.stock -= 1; // Realiza la resta de cantidad
-        await product.save(); // Guarda la actualización
+        product.stock -= 1; 
+        await product.save(); 
       }
     } else {
-      // Maneja el caso en el que "product" no sea un documento de Mongoose del modelo de productos
+      
       console.error('El objeto "product" no es un documento de Mongoose válido para el modelo de productos.', product);
     }
     

@@ -96,11 +96,11 @@ class UserController {
     const { id } = req.params;
 
     try {
-        console.log("Buscando usuario con _id:", id); // Agrega registro de depuración
+        console.log("Buscando usuario con _id:", id); 
         const user = await this.userRepositoryIndex.getUserById(id);
 
         if (!user) {
-            console.log("Usuario no encontrado"); // Agrega registro de depuración
+            console.log("Usuario no encontrado"); 
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
@@ -189,14 +189,14 @@ async uploadDocuments(req, res) {
 
     const uploadedDocuments = req.body.files; // Cambiar req.files a req.body.files
 
-    // Realiza acciones necesarias con los documentos, por ejemplo, actualiza el estado del usuario en la base de datos
+    
     const user = await this.userModel.findById(userId);
 
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
     
-    // Recorre los documentos subidos y agrégalos al campo "documents" del usuario
+    
     uploadedDocuments.forEach((document) => {
       user.documents.push({
         name: document.name,
@@ -204,10 +204,10 @@ async uploadDocuments(req, res) {
       });
     });
     
-    // Actualiza el estado del usuario según tus necesidades
+    
     user.status = 'Documento cargado';
     
-    // Guarda los cambios en la base de datos, incluyendo los documentos
+    
     await user.save();
 
     res.status(200).json({ message: 'Documentos subidos exitosamente' });
@@ -221,16 +221,15 @@ async getdocument(req, res){
   try {
     const userId = req.params.id;
 
-    // Consulta el usuario por su ID y obtén los detalles de los documentos
+    
     const user = await UserModel
       .findById(userId)
-      .select('documents'); // Incluye solo los detalles de los documentos
-
+      .select('documents');
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    // Responde con los detalles de los documentos
+ 
     res.status(200).json({ documents: user.documents });
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener los documentos', message: error.message });
@@ -284,13 +283,13 @@ console.log(error);
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-    // Generar un token único para restablecer la contraseña
+    
     const token = uuidv4().toString();
     user.resetPasswordToken = token.toString();
     user.resetPasswordExpires = Date.now() + 3600000;
     await user.save();
 
-    // Enviar correo electrónico con el enlace de restablecimiento
+    
     const resetLink = `http://tu-sitio-web/reset-password/${token}`;
     const emailContent = {
       from: TEST_MAIL,
@@ -299,7 +298,7 @@ console.log(error);
       html: `<p>Hola ${user.first_name},</p><p>Puedes restablecer tu contraseña <a href="${resetLink}">aquí</a>.</p>`,
     };
 
-    // Utiliza el transporter para enviar el correo electrónico
+  
     const transporter = createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -393,7 +392,7 @@ async findInactiveUsers(req, res) {
     });
 
     if (inactiveUsers.length === 0) {
-      // Si no hay usuarios inactivos, responde con un mensaje
+      
       return res.status(200).json({ message: 'No hay usuarios inactivos por el momento' });
     }
 
@@ -420,7 +419,7 @@ async findInactiveUsers(req, res) {
 
         console.log('delete5min', user);
 
-        // Agregar la eliminación del usuario aquí
+        
         const deletedUser = await UserRepositoryIndex.deleteUser(user._id);
 
         if (deletedUser) {
